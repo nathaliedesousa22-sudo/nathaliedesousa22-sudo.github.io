@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Mots mêlés en français : 78 sous-catégories, des grilles 100 % remplies où chaque lettre appartient à un mot.">
+<meta name="theme-color" content="#9E3B26">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icones/icone-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<link rel="preload" href="polices/atkinson-700.woff" as="font" type="font/woff" crossorigin>
+<title>Mots Mêlés</title>
+<style>
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url("polices/atkinson-400.woff") format("woff"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url("polices/atkinson-700.woff") format("woff"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 600; font-display: swap; src: url("polices/bricolage-600.woff") format("woff"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 800; font-display: swap; src: url("polices/bricolage-800.woff") format("woff"); }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Mise en page : la grille est la page — bandeau de choix en haut, grille à gauche, carnet de mots à droite (empilés sur téléphone). */
+:root {
+  --bg: #F5F4F0; --surface: #FFFFFF; --ink: #1E1C19; --muted: #6C675F; --line: #E2DED5;
+  --accent: #9E3B26; --accent-2: #C0583F; --accent-soft: #F5E4DA; --on-accent: #FFFFFF;
+  --wrong: #CFCAC1; --hl-op: 0.88; --sel-op: 0.92;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+body[data-coll="Nature"] { --accent: #2E5E3E; --accent-2: #4E8A5E; --accent-soft: #E1ECDF; }
+body[data-coll="Sport"] { --accent: #1F5FA8; --accent-2: #3A7BC4; --accent-soft: #E1EBF7; }
+body[data-coll="Voyages"] { --accent: #0F7C80; --accent-2: #22979B; --accent-soft: #DDF0F0; }
+body[data-coll="Musique"] { --accent: #6A3FA0; --accent-2: #8458BD; --accent-soft: #ECE4F6; }
+body[data-coll="Cinéma et spectacle"] { --accent: #A3243B; --accent-2: #C03A52; --accent-soft: #F6E0E4; }
+body[data-coll="La maison"] { --accent: #8A5A2B; --accent-2: #A67240; --accent-soft: #F3E8DC; }
+body[data-coll="Histoire"] { --accent: #7A6A1E; --accent-2: #948333; --accent-soft: #F1EDD9; }
+body[data-coll="Sciences et espace"] { --accent: #283C8C; --accent-2: #3F55AA; --accent-soft: #E2E6F5; }
+body[data-coll="Métiers"] { --accent: #3E5560; --accent-2: #56707C; --accent-soft: #E3E9EC; }
+body[data-coll="Fêtes et célébrations"] { --accent: #B0346E; --accent-2: #C94F88; --accent-soft: #F7E1EC; }
+body[data-coll="Transports"] { --accent: #B45A10; --accent-2: #CC7128; --accent-soft: #F8E7D8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --surface: #201E1B; --ink: #EDE9E1; --muted: #A29C92; --line: #35322D;
+    --accent: #E0795D; --accent-2: #B4513A; --accent-soft: #3A251E; --on-accent: #1A1310;
+    --wrong: #57534C; --hl-op: 0.45; --sel-op: 0.85; color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) body[data-coll="Nature"] { --accent: #84C493; --accent-2: #4E8A5E; --accent-soft: #1E3125; --on-accent: #0F1A12; }
+  :root:not([data-theme="light"]) body[data-coll="Sport"] { --accent: #7FB2EC; --accent-2: #1F5FA8; --accent-soft: #313941; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Voyages"] { --accent: #5CC7C9; --accent-2: #0F7C80; --accent-soft: #2B3C3A; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Musique"] { --accent: #B597E6; --accent-2: #6A3FA0; --accent-soft: #3B3440; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Cinéma et spectacle"] { --accent: #EC8095; --accent-2: #A3243B; --accent-soft: #453031; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="La maison"] { --accent: #D9A46A; --accent-2: #8A5A2B; --accent-soft: #413629; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Histoire"] { --accent: #D4C268; --accent-2: #7A6A1E; --accent-soft: #403C29; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Sciences et espace"] { --accent: #8FA2EE; --accent-2: #283C8C; --accent-soft: #343641; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Métiers"] { --accent: #9DB8C4; --accent-2: #3E5560; --accent-soft: #363A39; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Fêtes et célébrations"] { --accent: #EE8DBB; --accent-2: #B0346E; --accent-soft: #453238; --on-accent: #14120F; }
+  :root:not([data-theme="light"]) body[data-coll="Transports"] { --accent: #F2A35C; --accent-2: #B45A10; --accent-soft: #463627; --on-accent: #14120F; }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --surface: #201E1B; --ink: #EDE9E1; --muted: #A29C92; --line: #35322D;
+  --accent: #E0795D; --accent-2: #B4513A; --accent-soft: #3A251E; --on-accent: #1A1310;
+  --wrong: #57534C; --hl-op: 0.45; --sel-op: 0.85; color-scheme: dark;
+}
+:root[data-theme="dark"] body[data-coll="Nature"] { --accent: #84C493; --accent-2: #4E8A5E; --accent-soft: #1E3125; --on-accent: #0F1A12; }
+:root[data-theme="dark"] body[data-coll="Sport"] { --accent: #7FB2EC; --accent-2: #1F5FA8; --accent-soft: #313941; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Voyages"] { --accent: #5CC7C9; --accent-2: #0F7C80; --accent-soft: #2B3C3A; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Musique"] { --accent: #B597E6; --accent-2: #6A3FA0; --accent-soft: #3B3440; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Cinéma et spectacle"] { --accent: #EC8095; --accent-2: #A3243B; --accent-soft: #453031; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="La maison"] { --accent: #D9A46A; --accent-2: #8A5A2B; --accent-soft: #413629; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Histoire"] { --accent: #D4C268; --accent-2: #7A6A1E; --accent-soft: #403C29; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Sciences et espace"] { --accent: #8FA2EE; --accent-2: #283C8C; --accent-soft: #343641; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Métiers"] { --accent: #9DB8C4; --accent-2: #3E5560; --accent-soft: #363A39; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Fêtes et célébrations"] { --accent: #EE8DBB; --accent-2: #B0346E; --accent-soft: #453238; --on-accent: #14120F; }
+:root[data-theme="dark"] body[data-coll="Transports"] { --accent: #F2A35C; --accent-2: #B45A10; --accent-soft: #463627; --on-accent: #14120F; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 28px; transition: background .25s; }
+.page { max-width: 1180px; margin: 0 auto; display: grid; gap: 18px; }
+
+/* ---------- bandeau */
+.bandeau { display: flex; flex-wrap: wrap; align-items: end; gap: 14px 22px; }
+.logo { display: flex; gap: 3px; margin-right: auto; align-self: center; }
+.logo span { width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: 5px;
+  font: 800 1.15rem/1 var(--f-display); background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); }
+.logo span.mark { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.logo span.vide { visibility: hidden; width: .6rem; }
+.choix { display: grid; gap: 4px; min-width: 0; }
+.choix label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+select { font: 700 .95rem var(--f-body); color: var(--ink); background: var(--surface); border: 1.5px solid var(--line);
+  border-radius: 8px; padding: .5rem 2rem .5rem .7rem; max-width: 100%; min-width: 0; width: 18rem; }
+select:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+button { font: 700 .92rem var(--f-body); cursor: pointer; border-radius: 8px; padding: .55rem .95rem;
+  border: 1.5px solid var(--accent); background: var(--surface); color: var(--accent); transition: background .15s, color .15s; }
+button:hover:not(:disabled) { background: var(--accent-soft); }
+button.plein { background: var(--accent); color: var(--on-accent); }
+button.plein:hover:not(:disabled) { background: var(--accent-2); color: #fff; }
+button:disabled { opacity: .4; cursor: default; }
+
+/* ---------- jeu */
+.jeu { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: 22px; align-items: start; }
+.cadre { background: var(--surface); border: 2px solid var(--accent); border-radius: 14px; padding: 6px; position: relative; }
+svg#grille { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+.lettre { font: 700 21px var(--f-body); fill: var(--ink); pointer-events: none; }
+.lettre.sel { fill: var(--on-accent); }
+.trait { stroke-linecap: round; opacity: var(--hl-op); }
+.trait.faux { stroke: var(--wrong); opacity: 1; }
+.solution { stroke: var(--accent); opacity: .16; stroke-linecap: round; }
+.selection { stroke: var(--accent); opacity: var(--sel-op); stroke-linecap: round; }
+.flash { stroke: #D9534F; opacity: .9; stroke-linecap: round; }
+.indice { fill: none; stroke: var(--accent); stroke-width: 3; animation: pulse .7s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .35 } to { opacity: 1 } }
+.attente { position: absolute; inset: 6px; display: grid; place-items: center; background: var(--surface); border-radius: 10px;
+  font: 700 1.05rem var(--f-body); color: var(--accent); }
+
+.panneau { display: grid; gap: 14px; min-width: 0; }
+.score { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.score strong { font: 800 1.6rem/1 var(--f-display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.score .sur { color: var(--muted); font-weight: 700; }
+.temps { font: 700 1rem var(--f-body); color: var(--muted); font-variant-numeric: tabular-nums; }
+.barre { height: 8px; background: var(--accent-soft); border-radius: 99px; overflow: hidden; }
+.barre div { height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .3s; }
+.outils { display: flex; flex-wrap: wrap; gap: 8px; }
+.option { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: .9rem; cursor: pointer; }
+.option input { accent-color: var(--accent); width: 1.05rem; height: 1.05rem; }
+
+.carnet { background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px 16px; min-width: 0; }
+.carnet h2 { margin: 0 0 10px; font: 800 1.05rem/1.2 var(--f-display); color: var(--ink); text-wrap: balance; }
+.carnet h2 small { display: block; font: 700 .7rem var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+ul#mots { list-style: none; margin: 0; padding: 0; columns: 3; column-gap: 14px; }
+ul#mots li { display: flex; align-items: center; gap: 7px; padding: 2px 0; break-inside: avoid; font-size: .9rem; letter-spacing: .02em; }
+ul#mots li::before { content: ""; flex: none; width: .7rem; height: .7rem; border: 1.5px solid var(--accent); border-radius: 3px; }
+ul#mots li.ok { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; }
+ul#mots li.ok::before { border: 0; border-radius: 50%; background: var(--c); }
+.message { min-height: 1.4em; color: var(--muted); font-size: .92rem; }
+.message.bravo { color: var(--accent); font-weight: 700; }
+.victoire { background: var(--accent); color: var(--on-accent); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; }
+.victoire b { font: 800 1.3rem var(--f-display); }
+.victoire button { justify-self: start; background: var(--surface); color: var(--accent); border-color: var(--surface); }
+.aide { color: var(--muted); font-size: .82rem; }
+kbd { font: 700 .75rem var(--f-body); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--surface); }
+
+button.premium { border-style: dashed; }
+dialog#boutique { border: 0; border-radius: 16px; padding: 0; max-width: min(440px, calc(100vw - 32px)); width: 100%;
+  max-height: calc(100dvh - 32px); overflow-y: auto;
+  background: var(--surface); color: var(--ink); box-shadow: 0 18px 50px rgba(0,0,0,.28); }
+dialog#boutique::backdrop { background: rgba(20, 18, 15, .55); }
+.boutique-tete { background: var(--accent); color: var(--on-accent); padding: 18px 20px 16px; }
+.boutique-tete h2 { margin: 0; font: 800 1.45rem/1.15 var(--f-display); }
+.boutique-tete p { margin: 4px 0 0; font-weight: 700; opacity: .9; }
+.boutique-corps { padding: 16px 20px 20px; display: grid; gap: 12px; }
+.boutique-corps ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 1.4rem; font-size: .88rem; line-height: 1.35; }
+.boutique-corps li { break-inside: avoid; margin-bottom: 4px; }
+.boutique-corps .note { color: var(--muted); font-size: .85rem; margin: 0; }
+.boutique-actions { display: grid; gap: 8px; }
+.boutique-actions button { width: 100%; padding: .75rem 1rem; font-size: 1rem; }
+#boutique-titre:focus { outline: none; }
+#boutique-info { min-height: 1.2em; color: var(--accent); font-weight: 700; font-size: .9rem; margin: 0; }
+
+@media (max-width: 900px) {
+  .jeu { grid-template-columns: minmax(0, 1fr); }
+  .cadre { max-width: 620px; width: 100%; justify-self: center; }
+}
+@media (max-width: 560px) {
+  ul#mots { columns: 2; }
+  select { width: 100%; }
+  .choix { flex: 1 1 100%; }
+  .logo span { width: 1.6rem; height: 1.6rem; font-size: 1rem; }
+  .aide { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+
+<div class="page">
+  <header class="bandeau">
+    <div class="logo" aria-label="Mots Mêlés">
+      <span class="mark">M</span><span class="mark">O</span><span class="mark">T</span><span class="mark">S</span><span class="vide"></span><span>M</span><span>Ê</span><span>L</span><span>É</span><span>S</span>
+    </div>
+    <div class="choix"><label for="theme">Thème</label><select id="theme"></select></div>
+    <div class="choix"><label for="sous">Sous-catégorie</label><select id="sous"></select></div>
+    <button id="nouvelle" class="plein" type="button">Nouvelle grille</button>
+    <button id="debloquer" class="premium" type="button" hidden>Tous les thèmes</button>
+  </header>
+
+  <dialog id="boutique" aria-labelledby="boutique-titre">
+    <div class="boutique-tete"><h2 id="boutique-titre" tabindex="-1" autofocus>Tous les thèmes</h2><p id="boutique-resume"></p></div>
+    <div class="boutique-corps">
+      <ul id="boutique-liste"></ul>
+      <p class="note">Achat unique, valable à vie sur votre compte Google. Pas d'abonnement, pas de publicité.</p>
+      <div class="boutique-actions">
+        <button id="acheter" class="plein" type="button">Débloquer tous les thèmes</button>
+        <button id="restaurer" type="button">J'ai déjà acheté : restaurer</button>
+        <button id="fermer-boutique" type="button">Plus tard</button>
+      </div>
+      <p id="boutique-info" aria-live="polite"></p>
+    </div>
+  </dialog>
+
+  <main class="jeu">
+    <div class="cadre">
+      <svg id="grille" viewBox="0 0 600 600" role="img" aria-label="Grille de mots mêlés">
+        <g id="c-solution"></g><g id="c-traits"></g><g id="c-selection"></g><g id="c-indice"></g><g id="c-lettres"></g>
+      </svg>
+      <div class="attente" id="attente">Préparation de la grille…</div>
+    </div>
+
+    <section class="panneau">
+      <div class="score">
+        <div><strong id="nb">0</strong> <span class="sur">/ <span id="total">0</span> mots trouvés</span></div>
+        <div class="temps" id="temps">00:00</div>
+      </div>
+      <div class="barre"><div id="barre"></div></div>
+      <div class="outils">
+        <button id="annuler" type="button">Annuler</button>
+        <button id="retablir" type="button">Rétablir</button>
+        <button id="indice" type="button">Indice</button>
+        <button id="solution" type="button">Solution</button>
+        <button id="effacer" type="button">Tout effacer</button>
+      </div>
+      <label class="option" for="refuser"><input type="checkbox" id="refuser"> Ne barrer que les mots de la liste</label>
+      <div class="victoire" id="victoire" hidden><b>Bravo !</b><span id="victoire-texte"></span><button id="rejouer" type="button">Nouvelle grille</button></div>
+      <div class="message" id="message" aria-live="polite"></div>
+      <div class="carnet">
+        <h2><small id="univers"></small><span id="titre-liste">Mots à trouver</span></h2>
+        <ul id="mots"></ul>
+      </div>
+      <p class="aide">Glissez de la première à la dernière lettre d'un mot, ou cliquez-les l'une après l'autre. Raccourcis : <kbd>Ctrl</kbd>+<kbd>Z</kbd> annuler · <kbd>Ctrl</kbd>+<kbd>Y</kbd> rétablir · <kbd>H</kbd> indice · <kbd>Échap</kbd> annuler la sélection.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+const DONNEES = {"Nature":{"comblement":"IF RU OR ILE EAU MER LAC PIN PIC ROC VAL SOL AIR GEL SEL LYS LIS BEC NID VER PIE OIE ANE COQ AIL BLE RIZ GUI LIN THE ETE FER ERG REG RAT BOA ARA YAK GNOU EMEU PUMA LAMA ELAN ORME CERF LOUP OURS BUIS HOUX MURE NOIX RAIE BAR SOLE THON TAON GEAI BUSE LOIR PRE RIVE GUE MARE LAVE DUNE ROSE IRIS TIGE SEVE CIME AUBE NUIT JOUR CIEL LUNE ONDE FLOT VENT ORGE MIEL CIRE OEUF AILE ILOT ALGUE LIANE AULNE SAULE ORTIE TERRE BOIS ARBRE FLEUR NEIGE PLUIE ETOILE OISEAU ASTRE GIVRE ROSEE BRISE CEP ORQUE LIERRE AVOINE ROSEAU ECUME TRONC FAON BICHE SOURCE","groupes":[["Les animaux",[["Les Oiseaux","MOINEAU MESANGE PINSON MERLE ROUGEGORGE HIRONDELLE MARTINET ALOUETTE ROSSIGNOL FAUVETTE PIE CORBEAU CORNEILLE GEAI PIGEON TOURTERELLE COUCOU PIVERT HUPPE HERON CIGOGNE GRUE CYGNE CANARD OIE MOUETTE GOELAND AIGLE FAUCON BUSE EPERVIER VAUTOUR HIBOU CHOUETTE PERDRIX FAISAN CAILLE PLUME AILE BEC NID OEUF ENVOL CHANT"],["Les Insectes","ABEILLE GUEPE FRELON BOURDON FOURMI PAPILLON CHENILLE CHRYSALIDE LIBELLULE COCCINELLE SCARABEE HANNETON CRIQUET SAUTERELLE GRILLON CIGALE MOUCHE MOUSTIQUE PUCERON MANTE PHASME LUCIOLE CARABE TERMITE PUNAISE TAON ANTENNE ELYTRE THORAX LARVE NYMPHE RUCHE MIEL POLLEN NECTAR ESSAIM COCON ARAIGNEE TOILE CLOPORTE"],["La Ferme","VACHE TAUREAU VEAU COCHON TRUIE PORCELET MOUTON BREBIS AGNEAU CHEVRE BOUC CHEVAL JUMENT POULAIN ANE POULE COQ POUSSIN CANARD OIE DINDE LAPIN CHIEN CHAT FOIN PAILLE GRANGE ETABLE ECURIE TRACTEUR CHARRUE SILLON BLE ORGE AVOINE MAIS SEIGLE LAIT OEUF FROMAGE PRAIRIE CLOTURE FERMIER MOISSON"],["La Savane","LION LIONNE LIONCEAU GUEPARD LEOPARD HYENE ZEBRE GIRAFE ELEPHANT RHINOCEROS HIPPOPOTAME BUFFLE GAZELLE ANTILOPE GNOU IMPALA PHACOCHERE AUTRUCHE VAUTOUR MARABOUT CROCODILE BABOUIN SURICATE CHACAL TERMITIERE ACACIA BAOBAB HERBE SECHERESSE TROUPEAU MIGRATION SAFARI CRINIERE DEFENSE TROMPE SABOT TANIERE PISTE"],["La Jungle","JUNGLE LIANE ORCHIDEE FOUGERE BAMBOU PALMIER BANANIER CANOPEE HUMUS MOUSSON SINGE GORILLE CHIMPANZE ORANGOUTAN GIBBON TIGRE JAGUAR PANTHERE OCELOT TAPIR PARESSEUX TOUCAN PERROQUET ARA COLIBRI BOA PYTHON ANACONDA CAMELEON IGUANE GECKO GRENOUILLE MYGALE FOURMILIER CAIMAN PIRANHA FLEUVE CASCADE MANGROVE TERMITE PAPILLON"],["Animaux des Bois et Prés","LIEVRE LAPIN HERISSON TAUPE MULOT CAMPAGNOL MUSARAIGNE BELETTE FOUINE PUTOIS HERMINE RENARD BLAIREAU CHEVREUIL SANGLIER CHAUVESOURIS LOIR LEROT ECUREUIL VIPERE COULEUVRE ORVET LEZARD CRAPAUD BUSE FAUCON PERDRIX FAISAN CAILLE ALOUETTE CORBEAU PIE HIBOU EFFRAIE HAIE BOCAGE TERRIER FOSSE PRE CHAMP BOSQUET"]]],["Les paysages",[["La Forêt","CHENE SAPIN BOULEAU HETRE ERABLE FRENE ORME CEDRE SAULE PEUPLIER MELEZE FOUGERE MOUSSE ECORCE RACINE BRANCHE FEUILLAGE RESINE GLAND CHAMPIGNON BLAIREAU ECUREUIL SANGLIER CERF BICHE FAON RENARD LOUP LYNX HIBOU CHOUETTE CLAIRIERE TAILLIS SOUSBOIS CHATAIGNE LIERRE HOUX RONCE MURE SENTIER BUCHE SOUCHE TRONC CIME HUMUS LICHEN NOISETTE PIVERT GEAI COUCOU BOLET GIROLLE"],["Les Océans","BALEINE DAUPHIN REQUIN ORQUE CACHALOT CORAIL ANEMONE MEDUSE POULPE CALMAR CREVETTE CRABE HOMARD LANGOUSTE OURSIN ANGUILLE SAUMON THON SARDINE ALGUE PLANCTON RECIF ABYSSE MAREE VAGUE COURANT ECUME RIVAGE LITTORAL PHARE SABLE GALET COQUILLAGE MOULE HUITRE EPONGE EMBRUN HOULE LAGON RAIE MORUE BAR SOLE PHOQUE TORTUE NARVAL HIPPOCAMPE"],["La Montagne","SOMMET PIC CRETE GLACIER NEIGE AVALANCHE ROCHER FALAISE COL VALLEE ALPAGE CHAMOIS BOUQUETIN MARMOTTE AIGLE GYPAETE EDELWEISS GENTIANE CASCADE TORRENT REFUGE CORDEE SENTIER MORAINE CIRQUE ARETE EBOULIS LAC GROTTE GOUFFRE NEVE SAPIN PENTE VERSANT CHALET TROUPEAU BERGER CLOCHE ECHO BRUME CAIRN MYRTILLE"],["Rivières et Étangs","RIVIERE FLEUVE RUISSEAU SOURCE TORRENT CASCADE ETANG MARE MARAIS BERGE RIVE ESTUAIRE DELTA MEANDRE GUE PONT MOULIN ROSEAU JONC NENUPHAR GRENOUILLE CRAPAUD TRITON SALAMANDRE TETARD BROCHET TRUITE CARPE GARDON PERCHE ECREVISSE LOUTRE CASTOR RAGONDIN HERON MARTINPECHEUR LIBELLULE CANARD CYGNE GALET COURANT"],["Le Désert","DESERT DUNE SABLE OASIS PALMIER DATTE CACTUS MIRAGE SIROCCO CARAVANE CHAMEAU DROMADAIRE FENNEC SCORPION SERPENT VIPERE LEZARD GERBOISE CHACAL VAUTOUR ERG REG PLATEAU CANYON ROCHE CANICULE SECHERESSE SOLEIL CHALEUR PUITS SOURCE NOMADE TENTE ETOILE NUIT SILENCE HORIZON TEMPETE CAILLOU SEL"],["Les Pôles","BANQUISE ICEBERG GLACIER PINGOUIN MANCHOT PHOQUE MORSE OURS RENNE CARIBOU NARVAL BELUGA ORQUE BALEINE RENARD HARFANG LEMMING TOUNDRA AURORE BOREALE AUSTRALE BLIZZARD IGLOO TRAINEAU KAYAK FLOCON NEIGE GLACE GIVRE FROID POLAIRE ARCTIQUE ANTARCTIQUE KRILL MORUE PERGELISOL CRISTAL INUIT NUIT"],["Roches et Volcans","VOLCAN LAVE MAGMA CRATERE ERUPTION SEISME FAILLE PLAQUE CONTINENT ILE ARCHIPEL PRESQUILE PLAINE PLATEAU COLLINE MONTAGNE GROTTE STALACTITE STALAGMITE GRANIT BASALTE CALCAIRE ARGILE SCHISTE MARBRE SILEX QUARTZ CRISTAL FOSSILE MINERAL OR ARGENT CUIVRE FER SEL SABLE LIMON GALET ROCHER FALAISE CANYON GORGE"]]],["Plantes et jardin",[["Le Jardin","ROSE TULIPE JONQUILLE MARGUERITE PIVOINE LAVANDE LILAS JASMIN HORTENSIA DAHLIA PENSEE BEGONIA GERANIUM CAPUCINE BOURGEON PETALE TIGE GRAINE BULBE TERREAU ARROSOIR BECHE RATEAU SECATEUR BROUETTE POTAGER SERRE HAIE PELOUSE GAZON MASSIF COMPOST ENGRAIS ABEILLE COCCINELLE LIMACE ESCARGOT VER MERLE ROUGEGORGE BINAGE ALLEE TONNELLE"],["Les Fruits","POMME POIRE PRUNE CERISE PECHE ABRICOT FRAISE FRAMBOISE MYRTILLE GROSEILLE CASSIS MURE RAISIN FIGUE MELON PASTEQUE ORANGE CITRON MANDARINE PAMPLEMOUSSE BANANE ANANAS MANGUE KIWI LITCHI GRENADE NOIX NOISETTE AMANDE CHATAIGNE COING NECTARINE PAPAYE GOYAVE DATTE OLIVE AVOCAT MIRABELLE VERGER PEPIN NOYAU"],["Les Légumes","CAROTTE POIREAU NAVET RADIS BETTERAVE CELERI CHOU BROCOLI EPINARD SALADE LAITUE TOMATE COURGETTE AUBERGINE POIVRON CONCOMBRE CITROUILLE POTIRON HARICOT FEVE LENTILLE OIGNON AIL ECHALOTE ASPERGE ARTICHAUT FENOUIL PANAIS ENDIVE MAIS PATATE CRESSON MACHE BLETTE CORNICHON PERSIL CIBOULETTE BASILIC THYM"],["Fleurs des Champs","COQUELICOT BLEUET PAQUERETTE PISSENLIT MARGUERITE BOUTONDOR TREFLE CHARDON ORTIE MUGUET VIOLETTE PRIMEVERE JACINTHE ANEMONE PERCENEIGE CROCUS IRIS ORCHIDEE BRUYERE GENET AJONC DIGITALE CAMOMILLE MAUVE SAUGE MENTHE LIS LYS OEILLET SOUCI LISERON CHEVREFEUILLE GUI MYOSOTIS ANCOLIE PETALE SEPALE ETAMINE PISTIL POLLEN TIGE COROLLE"],["Les Arbres","CHENE HETRE BOULEAU ERABLE FRENE ORME TILLEUL PLATANE MARRONNIER CHATAIGNIER NOYER NOISETIER CERISIER POMMIER POIRIER PRUNIER OLIVIER FIGUIER PALMIER CYPRES CEDRE SAPIN EPICEA PIN MELEZE IF HOUX ACACIA SAULE PEUPLIER AULNE CHARME SORBIER SEQUOIA BAOBAB EUCALYPTUS MAGNOLIA BAMBOU TRONC ECORCE SEVE CIME RAMEAU AUBIER"]]],["Ciel et saisons",[["La Météo","SOLEIL NUAGE PLUIE ORAGE ECLAIR TONNERRE NEIGE GRELE BROUILLARD BRUME VENT BRISE RAFALE TEMPETE OURAGAN CYCLONE TORNADE ARCENCIEL ROSEE GIVRE VERGLAS GEL AVERSE BRUINE CANICULE SECHERESSE HUMIDITE NIMBUS CIRRUS CUMULUS STRATUS MISTRAL TRAMONTANE BLIZZARD MOUSSON EMBELLIE ECLAIRCIE CIEL AZUR AURORE CREPUSCULE"],["Les Saisons","PRINTEMPS ETE AUTOMNE HIVER EQUINOXE SOLSTICE BOURGEON FLORAISON GERMINATION RECOLTE MOISSON VENDANGE CUEILLETTE FEUILLE MARRON CITROUILLE CHAMPIGNON PLUIE BROUILLARD NEIGE FLOCON GIVRE GEL GLACE LUGE SOLEIL CHALEUR PLAGE VACANCES HIRONDELLE MIGRATION HIBERNATION NID EVEIL JOUR NUIT OMBRE FRAICHEUR CRUE DEGEL"]]]]},"Cuisine":{"comblement":"OS AIL SEL RIZ THE BOL POT VIN JUS FEU KIR OIE BAR CEP BLE RHUM MIEL OEUF NOIX PAIN FOUR LAIT TOFU SOJA MAIS ANIS CAFE CHOU MENU PLAT METS FLAN BRIE VEAU PORC THYM CUIT ROTI THON POIS ORGE SUCRE CREME TARTE SAUCE SIROP ZESTE FIGUE POIRE PECHE PRUNE DATTE OLIVE LARD MIE TAPAS TACO SOUPE PATE COING CITRON BEURRE FARINE NAPPE TASSE CUIRE FRIRE DORER BAIE FENOUIL AGNEAU RAVE NAVET CREPE SALADE","groupes":[["Tour du Monde des Saveurs",[["La cuisine italienne","RISOTTO LASAGNE FOCACCIA PESTO CARPACCIO TIRAMISU PIZZA PASTA SPAGHETTI TAGLIATELLE RAVIOLI GNOCCHI PENNE MOZZARELLA PARMESAN RICOTTA GORGONZOLA MASCARPONE BURRATA PROSCIUTTO MORTADELLE PANCETTA BOLOGNAISE CARBONARA MINESTRONE POLENTA BRUSCHETTA ANTIPASTI ARANCINI OSSOBUCO PANNACOTTA CANNOLI GELATO ESPRESSO CAPPUCCINO BASILIC ORIGAN OLIVE TOMATE CHIANTI GRISSINI CIABATTA CALZONE LIMONCELLO"],["Les spécialités asiatiques","SUSHI RAMEN PADTHAI DIMSUM GYOZA WOK MAKI SASHIMI TEMPURA MISO WASABI GINGEMBRE SOJA TOFU NOUILLES RIZ BAGUETTES NEMS ROULEAU PHO BOBUN CURRY TERIYAKI YAKITORI BENTO EDAMAME UDON SOBA KIMCHI BIBIMBAP SATAY LAQUE CANARD CITRONNELLE CORIANDRE SESAME GALANGAL NUOCMAM WONTON BAOZI MOCHI MATCHA SAKE LITCHI ALGUE NORI"],["La cuisine mexicaine et tex-mex","TACO GUACAMOLE FAJITA QUESADILLA BURRITO SALSA NACHOS TORTILLA ENCHILADA CHILI PIMENT JALAPENO HABANERO AVOCAT HARICOT MAIS CORIANDRE CITRONVERT TEQUILA MARGARITA CHURROS MOLE TAMALE CHIPOTLE CUMIN OIGNON FROMAGE CREME TOSTADA POZOLE CEVICHE SOMBRERO PINATA FRIJOLES CHIMICHANGA PAPRIKA EPICE TEXMEX ORIGAN MANGUE TOMATE CACAO"],["Le street-food mondial","KEBAB BURGER HOTDOG BAGEL POUTINE CHURROS FALAFEL CREPE GAUFRE PANINI WRAP TACOS FRITES NUGGETS SANDWICH PITA SHAWARMA SAMOSA BRETZEL DONUT FISHANDCHIPS CORNDOG TAPAS EMPANADA BANHMI KEFTA BROCHETTE SAUCISSE KETCHUP MOUTARDE MAYONNAISE CORNET BEIGNET HOUMOUS TZATZIKI GYROS POPCORN SODA FOODTRUCK CAMION KIOSQUE ARANCINI"]]],["Le Terroir Français",[["Les plats mijotés de grand-mère","BLANQUETTE POTAUFEU DAUBE COQAUVIN CASSOULET BOURGUIGNON CHOUCROUTE NAVARIN PARMENTIER RATATOUILLE POTEE GARBURE CIVET FRICASSEE RAGOUT BAECKEOFFE TARTIFLETTE ESTOUFFADE CARBONNADE PAUPIETTE BOUILLON COCOTTE FAITOUT MIJOTER BRAISER LARDONS CAROTTE POIREAU NAVET BOUQUETGARNI OIGNON ECHALOTE CHAMPIGNON VEAU BOEUF JARRET GIGOT SAUCE FUMET ROUX DIMANCHE MAMIE GRATIN"],["Le plateau de fromages","ROQUEFORT REBLOCHON CAMEMBERT COMTE MAROILLES BRIE MUNSTER BEAUFORT CANTAL EMMENTAL MIMOLETTE TOMME RACLETTE MORBIER EPOISSES CHAOURCE LIVAROT NEUFCHATEL BLEU FOURME SALERS LAGUIOLE OSSAU ABONDANCE VACHERIN MONTDOR CROTTIN BANON VALENCAY SAINTNECTAIRE SAINTMARCELLIN CHEVRE BREBIS VACHE AFFINAGE CROUTE CAVE LAIT FROMAGER PLATEAU FONDUE GRUYERE PICODON CAILLE"],["La boulangerie artisanale","BAGUETTE CROISSANT BRIOCHE MICHE FOUGASSE PAINAUCHOCOLAT CHAUSSON FICELLE BATARD TRADITION CAMPAGNE COMPLET SEIGLE EPI COURONNE PAINDEMIE VIENNOISERIE PAINAURAISINS CHOUQUETTE LEVAIN LEVURE FARINE PETRIN FOURNIL FOUR MIE CROUTE BOULANGER PETRISSAGE PATON TORSADE FLUTE GRIGNE PAINPERDU CHOCOLATINE TARTINE BEURRE SEL EAU FOURNEE PELLE BANNETON TOURTE PAINDEPICES"],["Les douceurs régionales","CANELE CALISSON KOUIGNAMANN BETISEDECAMBRAI NOUGAT MADELEINE MACARON KOUGLOF FARBRETON CLAFOUTIS GALETTE CREPE BERLINGOT PRALINE TROPEZIENNE PARISBREST BABA SAVARIN FINANCIER VISITANDINE BUGNE NAVETTE CROQUANT DRAGEE ANIS PATEDEFRUITS CARAMEL BERGAMOTE CRAQUELIN GAUFRE MERVEILLE PAINDEPICES GATEAUBASQUE FLAN MASSEPAIN TOURTEAU FRANGIPANE TUILE PALMIER CORNUELLE CROQUET SABLE NONNETTE"]]],["Haute Pâtisserie et Salon de Thé",[["Les classiques de la pâtisserie","ECLAIR MILLEFEUILLE OPERA TARTETATIN SAINTHONORE PARISBREST RELIGIEUSE FRAISIER FLAN BABA SAVARIN CHARLOTTE PROFITEROLE CHOUX MERINGUE PAVLOVA FORETNOIRE TARTEAUCITRON FINANCIER MADELEINE MACARON CREMEBRULEE ILEFLOTTANTE PITHIVIERS GALETTE FRANGIPANE CHANTILLY CREMEPATISSIERE GANACHE GLACAGE FONDANT NAPPAGE COULIS FEUILLETAGE SABLE BISCUIT GENOISE DACQUOISE ENTREMETS MOKA SUCRE BEURRE OEUF FARINE VANILLE"],["L'heure du café et du thé","EXPRESSO MATCHA EARLGREY MACARON SPECULOOS SCONE CAPPUCCINO LATTE MOKA RISTRETTO LUNGO NOISETTE ARABICA ROBUSTA CAFETIERE THEIERE TASSE SOUCOUPE INFUSION TISANE ROOIBOS JASMIN DARJEELING OOLONG CHAI SENCHA MENTHE VERVEINE CAMOMILLE BERGAMOTE GOUTER MUFFIN COOKIE BROWNIE MADELEINE SABLE BISCUIT CROISSANT SUCRE LAIT CREME SAMOVAR BARISTA MOUSSE MUG CUILLERE PLATEAU"],["Le paradis du chocolat","GANACHE TRUFFE PRALINE MOUSSE MENDIANT COULANT CACAO FEVE TABLETTE BONBON BOUCHEE ORANGETTE NOIR LAIT BLANC FONDANT BROWNIE GIANDUJA CABOSSE TEMPERAGE ENROBAGE MOULE FEUILLETINE CROUSTILLANT GLACAGE CHOCOLATIER CHOCOLATCHAUD NOUGATINE NOISETTE AMANDE CARAMEL ROCHER PAQUES OEUF LAPIN CLOCHE MOELLEUX ECLAT PEPITE COPEAUX FORETNOIRE CACAOYER FONDUE"],["Les parfums de glaces et sorbets","PISTACHE VANILLE STRACCIATELLA MANGUE CASSIS CARAMEL CHOCOLAT FRAISE FRAMBOISE CITRON NOIXDECOCO RHUMRAISIN MENTHE CAFE NOUGAT PRALINE YAOURT PASSION GRIOTTE MYRTILLE ABRICOT PECHE MELON POIRE BANANE COOKIE SPECULOOS CORNET COUPE BOULE SORBET GRANITE GELATO CHANTILLY SUNDAE ESQUIMAU BATONNET SPATULE TURBINE GLACIER COULIS NOISETTE AMARENA LITCHI YUZU CERISE"]]],["Dans la Peau d'un Chef",[["Les ustensiles de cuisine","FOUET MANDOLINE CHINOIS MARYSE ECONOME PASSOIRE LOUCHE ECUMOIRE SPATULE COUTEAU PLANCHE RAPE PRESSEAIL ROULEAU POELE CASSEROLE SAUTEUSE COCOTTE FAITOUT WOK MOULE BALANCE MIXEUR BLENDER ROBOT TAMIS ENTONNOIR PINCEAU POCHE DOUILLE EMPORTEPIECE CISEAUX PINCE SALADIER BOL CULDEPOULE ZESTEUR PILON MORTIER THERMOMETRE MINUTEUR CUILLERE FOURCHETTE ASSIETTE FOUR PLAQUE GRILLE"],["Les verbes d'action culinaire","EMINCER RISSOLER BLANCHIR POCHER GRATINER PETRIR CISELER HACHER TAILLER BRIDER FLAMBER DEGLACER MONTER FOUETTER BATTRE TAMISER INCORPORER NAPPER LUSTRER MIJOTER BRAISER POELER GRILLER ROTIR SAUTER FRIRE CUIRE BOUILLIR REDUIRE LIER SINGER ABAISSER FONCER DORER DRESSER ASSAISONNER MARINER FARCIR PANER ZESTER EPLUCHER DENOYAUTER CONCASSER DESOSSER FILETER EGOUTTER ETUVER LAMINER"],["Les herbes aromatiques et épices","CORIANDRE ROMARIN CARDAMOME CURCUMA PAPRIKA ESTRAGON THYM LAURIER BASILIC PERSIL CIBOULETTE ANETH CERFEUIL SAUGE MENTHE ORIGAN MARJOLAINE SARRIETTE CANNELLE MUSCADE GIROFLE CUMIN SAFRAN VANILLE POIVRE PIMENT GINGEMBRE ANIS BADIANE FENOUIL SESAME PAVOT SUMAC CURRY RASELHANOUT HARISSA ESPELETTE GALANGAL CITRONNELLE CARVI MOUTARDE RAIFORT LIVECHE AIL ECHALOTE FENUGREC SEL"],["Le vocabulaire de la brigade","COMMIS SOMMELIER PLONGEUR CHEF TOQUE TABLIER MENU SOUSCHEF SAUCIER ROTISSEUR POISSONNIER ENTREMETIER GARDEMANGER PATISSIER BOULANGER BOUCHER TOURNANT APPRENTI SERVEUR MAITREDHOTEL BARMAN HOTESSE CLIENT TABLE CARTE ADDITION POURBOIRE COMMANDE BRIGADE CUISINE OFFICE PASSE SERVICE COUPDEFEU PLATDUJOUR ENTREE DESSERT FROMAGE ETOILE GUIDE BISTROT BRASSERIE RESTAURANT VESTE CUISINIER PIANO FOURNEAU MISEENPLACE DEGUSTATION"]]],["Moments de Convivialité",[["Le repas de Noël et de fête","FOIEGRAS DINDE BUCHE HUITRE MARRON CHAMPAGNE SAUMON CHAPON CAVIAR HOMARD LANGOUSTE ESCARGOT TRUFFE PAPILLOTE CLEMENTINE CHOCOLAT PAINDEPICES MARRONGLACE TREIZEDESSERTS GALETTE BOUDINBLANC ORANGE CANNELLE VINCHAUD COTILLON REVEILLON SAPIN GUIRLANDE BOUGIE CADEAU NAPPE COUPE TOAST BLINIS AMUSEBOUCHE CANAPE VERRINE APERITIF GIBIER CHATAIGNE FARCE NOEL FETE DESSERT FESTIN BANQUET"],["Le brunch du dimanche","PANCAKES BACON OEUFPOCHE AVOCAT SMOOTHIE GAUFRE CROISSANT TOAST BENEDICTE BRIOCHE PAINPERDU MUESLI GRANOLA YAOURT FRUITS JUS ORANGE CAFE THE CHOCOLAT CONFITURE MIEL BEURRE SIROP ERABLE OMELETTE BROUILLE SAUMON FROMAGE JAMBON SALADE QUICHE BAGEL MUFFIN SCONE CREPE PORRIDGE VIENNOISERIE TARTINE CITRON PAMPLEMOUSSE FRAMBOISE MYRTILLE BANANE DIMANCHE NAPPE PLATEAU TERRASSE"]]]]},"Sport":{"comblement":"OR AS KO VTT RAID YOGA PING PONG TRAIL ROC MAT PRO FAN BOB CUP BUT TIR NUL SET JEU ARC SKI DOS CAP PAS LOB TEE ELAN RING BOXE JUDO GOLF POLO SURF VELO SAUT GANT CLUB PUTT RAME NAGE TOUR ETAPE MATCH COUPE STADE BALLE FILET RUGBY SPRINT CHRONO RELAIS PISTE SPORT EQUIPE ARBITRE SIFFLET MAILLOT ETE AIR EAU SAC AN OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Sport",[["Le football","FOOTBALL BALLON BUT GARDIEN ATTAQUANT DEFENSEUR MILIEU ARBITRE CARTONJAUNE CARTONROUGE PENALTY CORNER COUPFRANC HORSJEU TOUCHE TETE DRIBBLE PASSE TIR STADE PELOUSE MAILLOT CRAMPONS EQUIPE ENTRAINEUR SUPPORTER CHAMPIONNAT COUPE MATCH MITEMPS PROLONGATION VICTOIRE DEFAITE NUL FILET POTEAU TRANSVERSALE CAPITAINE SIFFLET TRIBUNE LUCARNE REMPLACANT VESTIAIRE"],["Les sports d'hiver","SKI SNOWBOARD LUGE BOBSLEIGH PATINAGE HOCKEY CURLING BIATHLON SLALOM DESCENTE PISTE TELESIEGE TELESKI FORFAIT MONITEUR SKIEUR BATON CHAUSSURE CASQUE MASQUE COMBINAISON ANORAK GANTS BONNET NEIGE POUDREUSE STATION CHALET RAQUETTES SAUT TREMPLIN BOSSES SKICROSS PATINOIRE IGLOO MONTAGNE SOMMET AVALANCHE DAMEUSE FLOCON"],["Les sports nautiques","NATATION PLONGEE PLONGEON SURF VOILE KAYAK CANOE AVIRON PADDLE PLANCHE KITESURF WATERPOLO JETSKI SKINAUTIQUE CRAWL BRASSE DOS PAPILLON PISCINE BASSIN LIGNE BOUEE PALMES TUBA MASQUE COMBINAISON MAILLOT BONNET VAGUE RAME PAGAIE VOILIER CATAMARAN REGATE BARREUR NAGEUR MAITRENAGEUR LONGUEUR SAUVETAGE APNEE RIVIERE"],["L'athlétisme et les JO","OLYMPIQUE ANNEAUX FLAMME PODIUM MEDAILLE OR ARGENT BRONZE SPRINT MARATHON RELAIS HAIES JAVELOT DISQUE MARTEAU POIDS PERCHE LONGUEUR HAUTEUR TRIPLESAUT DECATHLON HEPTATHLON PISTE COULOIR CHRONO RECORD DEPART ARRIVEE FINALE ATHLETE CHAMPION HYMNE DRAPEAU STADE TORCHE SERMENT GYMNASTIQUE JUDO ESCRIME CYCLISME TRIATHLON"]]]]},"Voyages":{"comblement":"ILE MER BAC ZOO TOUR ARC ETE PAS NEF ALPES LAC CAP RUE VOL BUS CAR SAC SUD EST RIO NIL PAU LIMA OSLO BALI CUBA INDE MALI TOGO OMAN IRAN GARE PORT QUAI TAXI VISA PLAN NORD PAYS ROME LYON NICE CARTE ROUTE HOTEL GITE TENTE PLAGE OUEST VILLE GUIDE PHOTO CHINE CHILI ESCALE VALISE EAU AIR VUE SEL AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Voyages",[["Les capitales du monde","PARIS LONDRES ROME MADRID BERLIN LISBONNE ATHENES VIENNE BRUXELLES AMSTERDAM BERNE OSLO STOCKHOLM HELSINKI DUBLIN VARSOVIE PRAGUE BUDAPEST MOSCOU TOKYO PEKIN SEOUL DELHI BANGKOK HANOI CANBERRA OTTAWA WASHINGTON MEXICO LIMA BOGOTA SANTIAGO BRASILIA CARACAS LECAIRE RABAT TUNIS ALGER DAKAR NAIROBI BAMAKO"],["Les villes de France","LYON MARSEILLE TOULOUSE NICE NANTES STRASBOURG MONTPELLIER BORDEAUX LILLE RENNES REIMS TOULON GRENOBLE DIJON ANGERS NIMES BREST TOURS LIMOGES AMIENS PERPIGNAN METZ BESANCON ORLEANS ROUEN CAEN NANCY AVIGNON AJACCIO BASTIA PAU BAYONNE BIARRITZ COLMAR ANNECY CHAMBERY POITIERS NIORT LAROCHELLE CANNES ARLES VANNES QUIMPER CALAIS"],["Préparer ses valises","VALISE SAC PASSEPORT BILLET CARTE GUIDE APPAREILPHOTO CHARGEUR ADAPTATEUR MAILLOT SERVIETTE LUNETTES CREME CHAPEAU CASQUETTE SANDALES BASKETS PYJAMA TROUSSE BROSSE DENTIFRICE SHAMPOING PEIGNE PULL VESTE IMPERMEABLE PARAPLUIE ETIQUETTE CADENAS ROULETTES BAGAGE CABINE SOUTE RESERVATION ITINERAIRE PLAN BOUSSOLE JUMELLES CARNET STYLO LIVRE ECOUTEURS ORDONNANCE"],["Les monuments célèbres","TOUREIFFEL ARCDETRIOMPHE LOUVRE NOTREDAME COLISEE PYRAMIDES SPHINX PARTHENON ACROPOLE BIGBEN TAJMAHAL GRANDEMURAILLE PETRA MACHUPICCHU ANGKOR ALHAMBRA SAGRADAFAMILIA KREMLIN VERSAILLES MONTSAINTMICHEL CHAMBORD PANTHEON SACRECOEUR TOURDEPISE STONEHENGE ALCATRAZ GOLDENGATE CHICHENITZA OPERA CATHEDRALE BASILIQUE CHATEAU PALAIS PHARE OBELISQUE ARENE TEMPLE MOSQUEE PAGODE ATOMIUM MANNEKENPIS"]]]]},"Musique":{"comblement":"DO RE MI ARIA OPUS BEL FA LA SI UT SOL CLE AIR SON BIS DUO COR POP RAP RAI BAL NOTE TRIO LUTH LYRE TUBA ALTO JAZZ ROCK FUNK SOUL GONG RIFF SOLO VOIX CHANT ORGUE HARPE FLUTE PIANO OPERA TEMPO DANSE TANGO VALSE SAMBA DISQUE RYTHME GAMME ACCORD AME PAS ECHO AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Musique",[["Les instruments","PIANO GUITARE VIOLON VIOLONCELLE CONTREBASSE ALTO HARPE FLUTE CLARINETTE HAUTBOIS BASSON SAXOPHONE TROMPETTE TROMBONE TUBA COR BATTERIE TAMBOUR CYMBALE TRIANGLE XYLOPHONE ACCORDEON HARMONICA ORGUE CLAVECIN MANDOLINE BANJO UKULELE CORNEMUSE DJEMBE MARACAS CASTAGNETTES TIMBALE SYNTHETISEUR LYRE CITHARE SITAR BALALAIKA OCARINA CARILLON TAMBOURIN"],["Les styles musicaux","JAZZ BLUES ROCK POP RAP REGGAE FUNK SOUL DISCO TECHNO ELECTRO HOUSE CLASSIQUE OPERA BAROQUE COUNTRY FOLK METAL PUNK GOSPEL SALSA TANGO VALSE SAMBA BOSSANOVA FLAMENCO ZOUK RAI CHANSON VARIETE MUSETTE RNB HIPHOP SLAM BALLADE MAMBO RUMBA CHACHACHA SWING BEBOP GRUNGE"],["Le vocabulaire musical","NOTE PORTEE CLE SOL FA DO RE MI LA SI GAMME ACCORD RYTHME TEMPO MESURE SOUPIR SILENCE BLANCHE NOIRE CROCHE RONDE DIESE BEMOL BECARRE MELODIE HARMONIE REFRAIN COUPLET PARTITION SOLFEGE MAJEUR MINEUR OCTAVE TONALITE NUANCE FORTE CRESCENDO ALLEGRO ADAGIO ANDANTE LEGATO STACCATO METRONOME DIAPASON ARPEGE TRILLE"],["Au concert","SCENE MICRO PUBLIC CHANTEUR CHANTEUSE CHORALE CHOEUR ORCHESTRE CHEFDORCHESTRE BAGUETTE PUPITRE SOLISTE DUO TRIO QUATUOR GROUPE TOURNEE FESTIVAL BILLET RAPPEL BIS APPLAUDIR OVATION RIDEAU COULISSES LOGES PROJECTEUR ENCEINTE AMPLI SONO BALANCES REPETITION ARTISTE VEDETTE FAN AUTOGRAPHE AFFICHE SALLE GUICHET PREMIERE ACOUSTIQUE ENCORE"]]]]},"Cinéma et spectacle":{"comblement":"ART NEZ ROI FEE FAN ROLE VUE DVD GAG BIS CRI DUO RIRE STAR FILM CLAP PLAN MIME ACTE CINE TELE SAGA TRAC SCENE DRAME FARCE NANAR ECRAN SALLE LOGE CLOWN PISTE DECOR OSCAR CESAR RIDEAU MASQUE MOTEUR ACTION PUBLIC TOURNEE BALCON SON EGO IRIS AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Cinéma et spectacle",[["Le tournage d'un film","CAMERA ACTEUR ACTRICE REALISATEUR SCENARIO SCENARISTE PRODUCTEUR CASTING DECOR COSTUME MAQUILLAGE CLAP MOTEUR ACTION COUPEZ PRISE PLAN SEQUENCE CADRAGE ZOOM TRAVELLING MONTAGE DOUBLAGE SOUSTITRE CASCADE CASCADEUR FIGURANT STUDIO PROJECTEUR PERCHE MICRO STAR TAPISROUGE AFFICHE BANDEANNONCE CINEMA ECRAN PELLICULE OSCAR CESAR FESTIVAL GENERIQUE"],["Les genres de films","COMEDIE DRAME WESTERN POLAR THRILLER HORREUR FANTASTIQUE AVENTURE ACTION ANIMATION DOCUMENTAIRE MUSICAL ROMANCE SCIENCEFICTION PEPLUM GUERRE ESPIONNAGE BIOPIC CATASTROPHE FANTASY POLICIER SUSPENSE MUET NOIRETBLANC DESSINANIME COURTMETRAGE LONGMETRAGE SERIE SAGA SUITE REMAKE NOUVELLEVAGUE SUPERHEROS MANGA ROADMOVIE CULTE NANAR"],["Le théâtre","SCENE RIDEAU COULISSES TROUPE COMEDIEN TRAGEDIE COMEDIE VAUDEVILLE MOLIERE RACINE CORNEILLE ACTE TIRADE REPLIQUE MONOLOGUE DIALOGUE SOUFFLEUR METTEURENSCENE DECOR COSTUME MASQUE ENTRACTE BALCON LOGE PARTERRE FAUTEUIL ORCHESTRE REPETITION GENERALE PREMIERE TROISCOUPS APPLAUDISSEMENT SALUT TRAC IMPROVISATION MIME MARIONNETTE GUIGNOL OPERETTE AFFICHE PIECE"],["Le cirque","CHAPITEAU PISTE CLOWN ACROBATE JONGLEUR TRAPEZE TRAPEZISTE FUNAMBULE DOMPTEUR DRESSAGE LION TIGRE ELEPHANT CHEVAL ECUYERE MAGICIEN ILLUSIONNISTE EQUILIBRISTE CONTORSIONNISTE MONSIEURLOYAL NEZROUGE PERRUQUE MAQUILLAGE PAILLETTES TAMBOUR FANFARE CERCEAU BALLES MASSUES MONOCYCLE ECHASSES FILET VOLTIGE PIROUETTE NUMERO SPECTACLE ROULOTTE CARAVANE TOURNEE CRACHEURDEFEU BARBEAPAPA"]]]]},"La maison":{"comblement":"LIT MUR TV WC NID RUE ETE CLE BOL POT VIS BAC SOL EAU GAZ FER TOIT CLOU SCIE SEAU SOFA CAVE BAIN FOUR COIN HALL ATRE ETAU LIME TAPIS LAMPE VASE PIECE PORTE VOLET EVIER LINGE NAPPE TABLE TASSE PLAT RABOT COLLE CHAISE GRENIER SEL THE VIN ABRI AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["La maison",[["Les pièces et les meubles","SALON CUISINE CHAMBRE SALLEDEBAIN GRENIER CAVE GARAGE BUREAU ENTREE COULOIR ESCALIER BALCON TERRASSE VERANDA CANAPE FAUTEUIL TABLE CHAISE LIT ARMOIRE COMMODE BUFFET ETAGERE BIBLIOTHEQUE TABOURET TAPIS RIDEAU LAMPE LUSTRE MIROIR CHEMINEE PLACARD TIROIR MATELAS OREILLER COUSSIN PORTE FENETRE VOLET PLAFOND PLANCHER MUR"],["Le bricolage","MARTEAU CLOU VIS TOURNEVIS PERCEUSE SCIE PINCE CLE NIVEAU METRE EQUERRE CHEVILLE ECROU BOULON RABOT LIME PONCEUSE PAPIERDEVERRE COLLE PINCEAU ROULEAU PEINTURE ENDUIT PLATRE CIMENT ETABLI ESCABEAU ECHELLE CUTTER AGRAFEUSE SERREJOINT BURIN TENAILLE MASSE TRUELLE VILEBREQUIN SCOTCH SILICONE MESURE GANTS TABLIER BOITEAOUTILS"],["Le ménage","BALAI ASPIRATEUR SERPILLIERE SEAU EPONGE CHIFFON PLUMEAU BALAYETTE PELLE POUBELLE SAVON LESSIVE JAVEL VINAIGRE DETACHANT LAVELINGE SECHELINGE LAVEVAISSELLE FER REPASSAGE CINTRE PANIER LINGE POUSSIERE VITRES CARRELAGE TAPIS ETENDOIR PINCES GANTS PRODUIT RINCER FROTTER LAVER ASTIQUER RANGER PLIER CIRER DEPOUSSIERER PROPRE"],["La décoration","TABLEAU CADRE BOUGIE VASE BOUQUET COUSSIN PLAID RIDEAU VOILAGE PAPIERPEINT PEINTURE TAPIS MIROIR LAMPE ABATJOUR GUIRLANDE STATUETTE BIBELOT PLANTE CACHEPOT HORLOGE PENDULE AFFICHE POSTER PHOTO GALET COULEUR PASTEL BOHEME VINTAGE SCANDINAVE INDUSTRIEL CAMPAGNE ZEN BAMBOU OSIER ROTIN LIN VELOURS DORURE PATINE MOULURE FRESQUE MOSAIQUE"]]]]},"Histoire":{"comblement":"OR OS RA AN ROI DUC NIL ARC FEU ERE AGE LOI EPEE ROME CLAN MAGE DIEU ISIS TOGE CHAR FORT TOUR DAME FIEF PAPE CODE ARME TRONE REINE TRIBU MOINE ARENE CESAR GAULE CELTE SILEX SCEAU DRUIDE MENHIR CASQUE EMPIRE GAULOIS FER PAIX RUE ECU OST SOU OCRE RUNE AS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Histoire",[["La Préhistoire","DINOSAURE MAMMOUTH BISON AUROCHS OURS CAVERNE GROTTE LASCAUX PEINTURE FEU SILEX BIFACE OUTIL LANCE HARPON ARC FLECHE CHASSEUR CUEILLEUR NOMADE TRIBU CLAN HOMO NEANDERTAL CROMAGNON FOSSILE OS SQUELETTE MENHIR DOLMEN CARNAC NEOLITHIQUE PALEOLITHIQUE AGRICULTURE POTERIE TISSAGE GLACIATION ARCHEOLOGUE FOUILLES TOTEM PEAU"],["L'Égypte ancienne","PHARAON PYRAMIDE SPHINX MOMIE SARCOPHAGE TOMBEAU NIL PAPYRUS HIEROGLYPHE SCRIBE TOUTANKHAMON RAMSES CLEOPATRE NEFERTITI KHEOPS RA ISIS OSIRIS ANUBIS HORUS SCARABEE OBELISQUE TEMPLE KARNAK LOUXOR GIZEH MEMPHIS THEBES DESERT CHAMEAU OASIS CROCODILE FELOUQUE AMULETTE ANKH EMBAUMEUR PRETRE TRESOR DIADEME SCEPTRE CHAMPOLLION ROSETTE"],["La Rome antique","EMPEREUR CESAR AUGUSTE NERON SENAT TOGE TUNIQUE LEGION LEGIONNAIRE CENTURION GLADIATEUR COLISEE ARENE CIRQUE CHAR FORUM AQUEDUC THERMES TEMPLE JUPITER MARS VENUS MINERVE ROMULUS REMUS LOUVE LATIN VILLA AMPHORE MOSAIQUE BOUCLIER GLAIVE CASQUE PATRICIEN PLEBEIEN ESCLAVE CONSUL REPUBLIQUE POMPEI VESUVE VOIEROMAINE SESTERCE LAURIER"],["Le Moyen Âge","CHATEAUFORT DONJON REMPART MURAILLE PONTLEVIS DOUVES HERSE CRENEAU TOUR CHEVALIER ECUYER ARMURE EPEE LANCE BOUCLIER HEAUME COTTE BLASON TOURNOI JOUTE ROI REINE SEIGNEUR VASSAL SERF PAYSAN MOINE ABBAYE CATHEDRALE CROISADE TROUBADOUR MENESTREL JONGLEUR BOUFFON DRAGON GRIMOIRE ENLUMINURE PARCHEMIN CATAPULTE ARBALETE FIEF DAME MARCHE"]]]]},"Sciences et espace":{"comblement":"OR OS ADN UV PH GAZ SOL AIR EAU SEL FER ION OHM LUX LUNE MARS ONDE NERF SANG PILE VOLT WATT NOVA ECHO GENE PUCE ASTRE ATOME RAYON LASER RADAR ROBOT SONDE FUSEE VIRUS COEUR ORBITE ETOILE AMPERE CELLULE MER SON OEIL TEMPS NEZ COU DOS AXE REIN AS AN","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Sciences et espace",[["Le système solaire","SOLEIL MERCURE VENUS TERRE MARS JUPITER SATURNE URANUS NEPTUNE PLUTON LUNE ETOILE PLANETE ASTEROIDE COMETE METEORITE ORBITE GALAXIE VOIELACTEE NEBULEUSE ECLIPSE CRATERE ANNEAUX SATELLITE GRAVITE ATMOSPHERE TELESCOPE ASTRONOME CONSTELLATION GRANDEOURSE ETOILEFILANTE AURORE COSMOS UNIVERS TROUNOIR BIGBANG ANNEELUMIERE EQUINOXE SOLSTICE ZODIAQUE ASTRE PHASE CROISSANT"],["La conquête spatiale","FUSEE NAVETTE ASTRONAUTE COSMONAUTE SPATIONAUTE SCAPHANDRE CASQUE APESANTEUR MODULE CAPSULE STATION SATELLITE SONDE ROVER LANCEMENT DECOLLAGE COMPTEAREBOURS ORBITE ALUNISSAGE APOLLO SPOUTNIK ARMSTRONG GAGARINE PESQUET KOUROU ARIANE HOUSTON NASA ESA MISSION EQUIPAGE PROPULSION REACTEUR CARBURANT ANTENNE PANNEAUSOLAIRE TELESCOPE HUBBLE MARS LUNE EXPLORATION"],["Les inventions","ROUE IMPRIMERIE BOUSSOLE TELESCOPE MICROSCOPE AMPOULE TELEPHONE TELEVISION RADIO ORDINATEUR INTERNET SMARTPHONE APPAREILPHOTO CINEMATOGRAPHE VACCIN PENICILLINE MOTEUR AUTOMOBILE AVION TRAIN VELO MACHINEAVAPEUR ELECTRICITE PILE RADAR LASER ROBOT REFRIGERATEUR STYLOBILLE PAPIER POUDRE HORLOGE LUNETTES THERMOMETRE BAROMETRE PARACHUTE DYNAMITE BRAILLE INVENTEUR BREVET EDISON PASTEUR CURIE"],["Le corps humain","COEUR CERVEAU POUMON FOIE ESTOMAC REIN INTESTIN SQUELETTE MUSCLE OS SANG VEINE ARTERE PEAU NERF TETE COU EPAULE BRAS COUDE POIGNET MAIN DOIGT POUCE ONGLE JAMBE GENOU CHEVILLE PIED ORTEIL TALON DOS VENTRE NOMBRIL OEIL OREILLE NEZ BOUCHE LANGUE DENT LEVRE JOUE MENTON FRONT SOURCIL CHEVEUX"]]]]},"Métiers":{"comblement":"BUS CAR ART DOC CAP BAC LOI ETAT BOIS FER CUIR PAIN AIDE KINE PROF JUGE KEPI SOIN DENT GARE PORT TAXI PAIE CHEF OUTIL SCIE CLOU VERRE AGENT MAIRE GARDE MARIN GRADE USINE POSTE PATRON METIER MOUSSE COCHER EMPLOI BUREAU ATELIER PRO MER EAU FIL VIS AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Métiers",[["Les métiers de l'artisanat","BOULANGER BOUCHER MENUISIER EBENISTE CHARPENTIER MACON PLOMBIER ELECTRICIEN PEINTRE CARRELEUR COUVREUR SERRURIER FORGERON HORLOGER BIJOUTIER COUTURIER TAILLEUR CORDONNIER POTIER VERRIER TAPISSIER FLEURISTE COIFFEUR PATISSIER CHOCOLATIER FROMAGER TONNELIER LUTHIER RELIEUR SCULPTEUR VITRAILLISTE ATELIER APPRENTI OUTIL ETABLI SAVOIRFAIRE COMPAGNON CHEFDOEUVRE TANNEUR VANNIER"],["Les métiers de la santé","MEDECIN INFIRMIER INFIRMIERE CHIRURGIEN DENTISTE PHARMACIEN KINE SAGEFEMME PEDIATRE OPTICIEN AMBULANCIER PSYCHOLOGUE VETERINAIRE RADIOLOGUE CARDIOLOGUE ANESTHESISTE AIDESOIGNANT ORTHOPHONISTE OSTEOPATHE PODOLOGUE DIETETICIEN BRANCARDIER STETHOSCOPE ORDONNANCE SERINGUE PANSEMENT HOPITAL CLINIQUE CABINET URGENCES BLOUSE THERMOMETRE VACCIN CONSULTATION DIAGNOSTIC GUERISON SOIN"],["Les métiers du transport","CHAUFFEUR CONDUCTEUR ROUTIER PILOTE HOTESSE STEWARD CAPITAINE MARIN MATELOT CONTROLEUR AIGUILLEUR MACHINISTE TAXI LIVREUR COURSIER COCHER DEMENAGEUR DOCKER CAMIONNEUR CHEMINOT GARAGISTE MECANICIEN CONVOYEUR BATELIER PASSEUR DEPANNEUR AMBULANCIER VOLANT PERMIS ITINERAIRE CARGAISON COLIS GARE PORT AEROPORT ESCALE BOUSSOLE TRAJET"],["Les métiers en uniforme","POMPIER POLICIER GENDARME MILITAIRE SOLDAT MARIN AVIATEUR DOUANIER GARDIEN SAUVETEUR SECOURISTE PARACHUTISTE FACTEUR CONTROLEUR AGENT VIGILE CASERNE COMMISSARIAT GENDARMERIE SIRENE GYROPHARE CASQUE INSIGNE GRADE SERGENT CAPORAL LIEUTENANT CAPITAINE COLONEL GENERAL KEPI BERET MEDAILLE PATROUILLE DEFILE GRANDECHELLE LANCE EXTINCTEUR SIFFLET"]]]]},"Fêtes et célébrations":{"comblement":"AN ROI OUI BAL GUI CRI RIZ VIN THE AGE FETE GALA NOEL FEVE JOIE RIRE VOEU HOUX ANGE NUIT LUNE PEUR CHAT ROBE CAPE CHANT DANSE AMOUR BAGUE RUBAN NOEUD SAPIN JOUET VOILE CARTE FARCE ETOILE BOUGIE CADEAU MASQUE GATEAU AMI JEU SON FEU AIR ETE AS OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Fêtes et célébrations",[["Noël","SAPIN GUIRLANDE BOULE ETOILE CRECHE PERENOEL RENNE TRAINEAU LUTIN CADEAU CHAUSSETTE CHEMINEE HOUX GUI BOUGIE NEIGE FLOCON CALENDRIER AVENT REVEILLON MESSE CANTIQUE CHORALE NOEL JOUET PAPIERCADEAU RUBAN NOEUD BUCHE MARRON PAINDEPICES ORANGE CANNE SUCRERIE ANGE CLOCHE MARCHEDENOEL LETTRE VOEUX FAMILLE"],["Halloween","CITROUILLE SORCIERE FANTOME VAMPIRE ZOMBIE MOMIE SQUELETTE LOUPGAROU CHAUVESOURIS ARAIGNEE TOILE BALAI CHAUDRON POTION CHAT NOIR HIBOU CIMETIERE TOMBE CERCUEIL CRANE BONBON FRIANDISE DEGUISEMENT MASQUE CAPE CHAPEAU LANTERNE BOUGIE NUIT LUNE FRISSON PEUR CRI SORTILEGE MALEDICTION GRIMOIRE FANTASTIQUE MAISONHANTEE FRANKENSTEIN DRACULA OCTOBRE"],["Le mariage","MARIAGE MARIEE MARIE ALLIANCE BAGUE FIANCAILLES TEMOIN DEMOISELLE BOUQUET ROBE VOILE COSTUME NOEUDPAPILLON MAIRIE EGLISE CEREMONIE SERMENT DISCOURS BAISER CORTEGE DRAGEES PIECEMONTEE GATEAU CHAMPAGNE BAL VALSE ORCHESTRE INVITES FAIREPART LISTE CADEAUX RIZ PETALES CONFETTIS LUNEDEMIEL AMOUR FIDELITE PHOTOGRAPHE TRAITEUR SALLE NOCES"],["L'anniversaire","ANNIVERSAIRE GATEAU BOUGIES CADEAU PAQUET RUBAN BALLON GUIRLANDE CONFETTIS FETE INVITATION INVITES COPAINS CHANSON SOUFFLER VOEU SURPRISE CHAPEAU SERPENTIN COTILLON JEUX PINATA CHASSEAUTRESOR GOUTER BONBONS SODA CREME CHOCOLAT FRAISIER AGE AN CARTE PHOTO DANSE MUSIQUE RIRE JOIE DEGUISEMENT MAQUILLAGE CLOWN MAGICIEN"]]]]},"Transports":{"comblement":"CAR BUS KM RER TGV VAN SKI VOL JET BAC NEF MAT CAP FEU VELO MOTO AUTO TRAM TAXI ROUE PNEU GARE QUAI PORT PONT RAIL VOIE CALE AILE STOP CODE FREIN ROUTE ANCRE BARGE VOILE PISTE RADAR PLEIN QUILLE HELICE PERMIS TUNNEL RUE AIR MER EAU AS AN OR OS","secours":"AS OS OR IF AN AIR EAU SEL ILE ROI LOI ART BUT JEU RUE VIE AMI NID LIT BAL FIL CLE COU NEZ DOS MAI ETE PRE BOL POT THE RIZ VIN OIE ANE LAC MER VAL PIC ROC SOL FER ORGE PAIN MIEL NUIT JOUR CIEL LUNE ROSE LYS IRIS TOIT MUR PORTE NOTE SON CHANT DANSE AMIE FETE TOUR ROUE CAP ZOO SAC CRI VOL TIR OEUF ARC BLE GUI LIN PAS RIRE RIVE GARE PONT CARTE","groupes":[["Transports",[["L'automobile","VOITURE MOTEUR VOLANT PNEU ROUE FREIN EMBRAYAGE ACCELERATEUR BOITEDEVITESSE PHARE CLIGNOTANT CAPOT COFFRE PORTIERE PAREBRISE ESSUIEGLACE RETROVISEUR CEINTURE KLAXON PARECHOC BATTERIE RADIATEUR ESSENCE DIESEL ELECTRIQUE HYBRIDE GARAGE PARKING AUTOROUTE PEAGE ROCADE RONDPOINT PERMIS CODE CARTEGRISE STATIONSERVICE CABRIOLET BERLINE BREAK COUPE LIMOUSINE CAMPINGCAR DEPANNEUSE"],["Le train","TRAIN TGV LOCOMOTIVE WAGON RAIL VOIE QUAI GARE BILLET CONTROLEUR CHEMINOT AIGUILLAGE PASSAGENIVEAU TUNNEL VIADUC PONT SIFFLET VAPEUR CHARBON TENDER FRET MARCHANDISES COMPARTIMENT COUCHETTE WAGONLIT BAR VOYAGEUR TERMINUS CORRESPONDANCE HORAIRE RETARD DEPART ARRIVEE TRAMWAY METRO RER ORIENTEXPRESS MICHELINE AUTORAIL VALISE COMPOSTER"],["Les bateaux","BATEAU VOILIER PAQUEBOT FERRY CARGO PETROLIER CHALUTIER YACHT CATAMARAN TRIMARAN PENICHE BARQUE CANOT RADEAU GONDOLE JONQUE GALION CARAVELLE FREGATE SOUSMARIN PORTEAVIONS REMORQUEUR BRISEGLACE HUBLOT PONT CALE PROUE POUPE MAT VOILE ANCRE GOUVERNAIL BARRE QUAI PORT PHARE CAPITAINE MOUSSE EQUIPAGE TRAVERSEE NAUFRAGE BOUEE"],["Les avions","AVION AEROPORT PISTE DECOLLAGE ATTERRISSAGE PILOTE COPILOTE HOTESSE STEWARD COCKPIT CABINE HUBLOT AILE REACTEUR HELICE CARLINGUE QUEUE GOUVERNE KEROSENE TURBULENCE ALTITUDE VOL ESCALE TERMINAL EMBARQUEMENT PORTE BAGAGE SOUTE PASSEPORT DOUANE CONTROLE TOURDECONTROLE RADAR HELICOPTERE PLANEUR MONTGOLFIERE DIRIGEABLE PARACHUTE BIPLAN CONCORDE CEINTURE"]]]]}};
+const TAILLE = 15, CASE = 40, MARGE = 0, POLICE = 21;
+const COULEURS = ["#F2BE3C", "#6FCDB0", "#F28C95", "#86B6EE", "#B9A1EE", "#A3D46E", "#F5A86E", "#6CC4E0", "#E591D2", "#D2C752"];
+
+/* ===================== moteur de grilles (même algorithme que les livres) ===================== */
+function generer(motsTheme, motsComblement, taille, secours = [], essaisPurs = 0) {
+  const DIRS = [[0,1],[1,0],[1,1],[-1,1],[0,-1],[-1,0],[-1,-1],[1,-1]];
+  const rnd = Math.random, choix = a => a[Math.floor(rnd() * a.length)];
+  const dans = (r, c) => r >= 0 && r < taille && c >= 0 && c < taille;
+  const cases = (r, c, d, n) => Array.from({length: n}, (_, i) => [r + d[0]*i, c + d[1]*i]);
+  const compatible = (g, mot, cs) => cs.every(([r, c], i) => g[r][c] === null || g[r][c] === mot[i]);
+  const poser = (g, mot, cs) => cs.forEach(([r, c], i) => { g[r][c] = mot[i]; });
+  const contrainte = (g, r, c) => DIRS.reduce((s, [dr, dc]) => s + (dans(r+dr, c+dc) && g[r+dr][c+dc] !== null ? 1 : 0), 0);
+  motsTheme = [...new Set(motsTheme.filter(m => m.length <= taille))];
+  const dejaComblement = new Set(motsComblement);
+  for (let essai = 0; essai < 300; essai++) {
+    const g = Array.from({length: taille}, () => Array(taille).fill(null));
+    const places = {};
+    let total = 0;
+    const ordre = motsTheme.map(m => [m, m.length + rnd()*4]).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+    for (const mot of ordre) {
+      if (total > taille * taille * 0.9) break;
+      for (let k = 0; k < 60; k++) {
+        const d = choix(DIRS), r = Math.floor(rnd()*taille), c = Math.floor(rnd()*taille);
+        if (!dans(r + d[0]*(mot.length-1), c + d[1]*(mot.length-1))) continue;
+        const cs = cases(r, c, d, mot.length);
+        if (compatible(g, mot, cs) && cs.some(([a, b]) => g[a][b] === null)) { poser(g, mot, cs); places[mot] = cs; total += mot.length; break; }
+      }
+    }
+    let echec = false;
+    for (;;) {
+      const vides = [];
+      for (let r = 0; r < taille; r++) for (let c = 0; c < taille; c++) if (g[r][c] === null) vides.push([r, c, -contrainte(g, r, c) + rnd()*0.5]);
+      if (!vides.length) break;
+      vides.sort((a, b) => a[2] - b[2]);
+      const [r0, c0] = vides[0];
+      const pool = motsTheme.filter(m => !(m in places)).map(m => [m, 1]).concat(motsComblement.filter(m => !(m in places)).map(m => [m, 0]));
+      const cands = [];
+      const chercher = pool => { for (const [mot, prio] of pool) {
+        const n = mot.length;
+        for (const d of DIRS) for (let i = 0; i < n; i++) {
+          const r = r0 - d[0]*i, c = c0 - d[1]*i;
+          if (!(dans(r, c) && dans(r + d[0]*(n-1), c + d[1]*(n-1)))) continue;
+          const cs = cases(r, c, d, n);
+          if (compatible(g, mot, cs)) cands.push([cs.filter(([a, b]) => g[a][b] === null).length, prio, mot, cs, rnd()*2]);
+        }
+      } };
+      chercher(pool);
+      // petits mots courants : seulement pour une case impossible à couvrir avec le thème
+      if (!cands.length && secours.length && essai >= essaisPurs)
+        chercher(secours.filter(m => !(m in places) && !dejaComblement.has(m)).map(m => [m, -1]));
+      if (!cands.length) { echec = true; break; }
+      cands.sort((a, b) => (b[1] - a[1]) || ((b[0] + b[4]) - (a[0] + a[4])));
+      const [, , mot, cs] = choix(cands.slice(0, 4));
+      poser(g, mot, cs); places[mot] = cs;
+    }
+    const nb = Object.keys(places).length;
+    if (!echec && nb >= 35 && nb <= 70) return {grille: g, places};
+  }
+  throw new Error("Impossible de remplir la grille");
+}
+
+let travailleur = null;
+try {
+  const src = `const generer = ${generer.toString()};
+onmessage = e => { try { postMessage({ok: true, res: generer(e.data.mots, e.data.comblement, e.data.taille, e.data.secours, 40)}); }
+                   catch (err) { postMessage({ok: false, err: String(err)}); } };`;
+  travailleur = new Worker(URL.createObjectURL(new Blob([src], {type: "text/javascript"})));
+} catch (e) { travailleur = null; }
+
+function lancerGeneration(mots, comblement, secours = []) {
+  return new Promise((ok, ko) => {
+    if (travailleur) {
+      travailleur.onmessage = e => e.data.ok ? ok(e.data.res) : ko(e.data.err);
+      travailleur.onerror = () => { travailleur = null; lancerGeneration(mots, comblement, secours).then(ok, ko); };
+      travailleur.postMessage({mots, comblement, secours, taille: TAILLE});
+    } else {
+      setTimeout(() => { try { ok(generer(mots, comblement, TAILLE, secours, 40)); } catch (e) { ko(e); } }, 30);
+    }
+  });
+}
+
+/* ===================== état ===================== */
+const $ = id => document.getElementById(id);
+const svg = $("grille"), NS = "http://www.w3.org/2000/svg";
+const E = {
+  coll: "Cuisine", groupe: 0, sous: "", grille: null, places: {}, traits: [], annuler: [], retablir: [],
+  depart: null, fin: null, glisse: false, modeClic: false, solution: false, indice: null, nbIndices: 0,
+  debut: 0, finPartie: 0, enCours: false
+};
+let textes = [];           // éléments <text> de la grille
+let centrage = {};         // décalage de l'encre de chaque lettre (centrage exact)
+
+const memoire = {
+  lire() { try { return JSON.parse(localStorage.getItem("mm-choix") || "null"); } catch (e) { return null; } },
+  ecrire(v) { try { localStorage.setItem("mm-choix", JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ===================== formule gratuite + achat « Tous les thèmes » ===================== */
+// FREEMIUM vaut false dans la version en ligne (tout est ouvert) et true dans l'application Google Play.
+const FREEMIUM = true;
+const GRATUITS = new Set(["Nature|0", "Nature|1", "Cuisine|0", "Sport|0"]);   // thèmes offerts
+const PRODUIT = "tous_les_themes";                                             // identifiant du produit dans la Play Console
+const BILLING = "https://play.google.com/billing";
+const premium = {
+  actif: !FREEMIUM,
+  memorise() { try { return localStorage.getItem("mm-premium") === "1"; } catch (e) { return false; } },
+  memoriser() { try { localStorage.setItem("mm-premium", "1"); } catch (e) {} }
+};
+const estLibre = cle => premium.actif || GRATUITS.has(cle);
+let boutique = null, prixAffiche = "";
+
+async function initBoutique() {
+  if (!FREEMIUM) return;
+  if (premium.memorise()) { premium.actif = true; return; }
+  if (!("getDigitalGoodsService" in window)) return;          // navigateur ordinaire : pas de paiement
+  try {
+    boutique = await window.getDigitalGoodsService(BILLING);
+    if (!boutique) return;
+    try {
+      const [d] = await boutique.getDetails([PRODUIT]);
+      if (d && d.price) prixAffiche = new Intl.NumberFormat("fr-FR", {style: "currency", currency: d.price.currency}).format(+d.price.value);
+    } catch (e) {}
+    await restaurer(true);
+  } catch (e) { boutique = null; }
+}
+async function restaurer(silencieux) {
+  if (!boutique) { if (!silencieux) infoBoutique("La restauration se fait dans l'application installée depuis Google Play."); return false; }
+  try {
+    let achats = await boutique.listPurchases();
+    if (boutique.listPurchaseHistory) achats = achats.concat(await boutique.listPurchaseHistory());
+    if (achats.some(a => a.itemId === PRODUIT)) { debloquer(); return true; }
+  } catch (e) {}
+  if (!silencieux) infoBoutique("Aucun achat trouvé sur ce compte Google.");
+  return false;
+}
+async function acheter() {
+  if (!boutique) { infoBoutique("L'achat se fait dans l'application Mots Mêlés installée depuis Google Play."); return; }
+  try {
+    const demande = new PaymentRequest([{supportedMethods: BILLING, data: {sku: PRODUIT}}],
+                                       {total: {label: "Total", amount: {currency: "EUR", value: "0"}}});
+    const reponse = await demande.show();
+    // achat unique : validé auprès de Google (consume), puis le déblocage est mémorisé ;
+    // sur un autre appareil, « restaurer » le retrouve dans l'historique d'achats du compte.
+    try { await boutique.consume(reponse.details.purchaseToken); } catch (e) {}
+    await reponse.complete("success");
+    debloquer();
+  } catch (e) { infoBoutique("Achat annulé ou impossible pour le moment."); }
+}
+function debloquer() {
+  premium.actif = true; premium.memoriser();
+  $("debloquer").hidden = true;
+  remplirThemes();
+  if ($("boutique").open) $("boutique").close();
+  message("Merci ! Tous les thèmes sont débloqués.", true);
+}
+function infoBoutique(t) { $("boutique-info").textContent = t; }
+function ouvrirBoutique() {
+  const verrouilles = [];
+  let nbSous = 0;
+  for (const [coll, d] of Object.entries(DONNEES)) d.groupes.forEach(([nom, ts], i) => {
+    if (!GRATUITS.has(coll + "|" + i)) { verrouilles.push(nom); nbSous += ts.length; }
+  });
+  $("boutique-resume").textContent = `${verrouilles.length} thèmes et ${nbSous} sous-catégories en plus`;
+  $("boutique-liste").innerHTML = "";
+  for (const v of verrouilles) { const li = document.createElement("li"); li.textContent = v; $("boutique-liste").appendChild(li); }
+  $("acheter").textContent = prixAffiche ? `Débloquer tous les thèmes — ${prixAffiche}` : "Débloquer tous les thèmes";
+  infoBoutique("");
+  try { $("boutique").showModal(); } catch (e) { $("boutique").setAttribute("open", ""); }
+  $("boutique").scrollTop = 0; $("boutique-titre").focus();
+}
+$("debloquer").onclick = ouvrirBoutique;
+$("acheter").onclick = acheter;
+$("restaurer").onclick = () => restaurer(false);
+$("fermer-boutique").onclick = () => $("boutique").close();
+
+/* ===================== choix du thème ===================== */
+function remplirThemes() {
+  const sel = $("theme"); sel.innerHTML = "";
+  const plus = document.createElement("optgroup"); plus.label = "Plus de thèmes";
+  for (const [coll, d] of Object.entries(DONNEES)) {
+    const etiquette = (nom, cle) => estLibre(cle) ? nom : "🔒 " + nom;
+    if (d.groupes.length === 1) { plus.appendChild(new Option(etiquette(coll, coll + "|0"), coll + "|0")); continue; }
+    const og = document.createElement("optgroup"); og.label = coll;
+    d.groupes.forEach(([nom], i) => { const o = new Option(etiquette(nom, coll + "|" + i), coll + "|" + i); og.appendChild(o); });
+    sel.appendChild(og);
+  }
+  if (plus.children.length) sel.appendChild(plus);
+  sel.value = E.coll + "|" + E.groupe;
+}
+function remplirSous() {
+  const sel = $("sous"); sel.innerHTML = "";
+  sel.appendChild(new Option("Au hasard dans ce thème", "__hasard"));
+  for (const [nom] of themesCourants()) sel.appendChild(new Option(nom, nom));
+  if (!themesCourants().some(([n]) => n === E.sous)) E.sous = themesCourants()[0][0];
+  sel.value = E.sous;
+}
+const themesCourants = () => DONNEES[E.coll].groupes[E.groupe][1];
+$("theme").addEventListener("change", e => {
+  if (!estLibre(e.target.value)) { e.target.value = E.coll + "|" + E.groupe; ouvrirBoutique(); return; }
+  const [c, g] = e.target.value.split("|"); E.coll = c; E.groupe = +g; E.sous = "";
+  document.body.dataset.coll = c; remplirSous(); nouvelleGrille();
+});
+$("sous").addEventListener("change", e => { E.sous = e.target.value; nouvelleGrille(); });
+
+/* ===================== génération ===================== */
+async function nouvelleGrille() {
+  if (E.enCours) return;
+  const themes = themesCourants();
+  let nom = E.sous;
+  if (nom === "__hasard" || !themes.some(([n]) => n === nom)) nom = themes[Math.floor(Math.random() * themes.length)][0];
+  const mots = themes.find(([n]) => n === nom)[1].split(" ");
+  memoire.ecrire({coll: E.coll, groupe: E.groupe, sous: E.sous});
+  E.enCours = true; activer(false);
+  $("attente").hidden = false; message(`Préparation d'une grille « ${nom} »…`);
+  try {
+    const d = DONNEES[E.coll];
+    const res = await lancerGeneration(mots, d.comblement.split(" "), d.secours ? d.secours.split(" ") : []);
+    Object.assign(E, {grille: res.grille, places: res.places, sousJouee: nom, traits: [], annuler: [], retablir: [],
+      depart: null, fin: null, glisse: false, modeClic: false, solution: false, indice: null, nbIndices: 0,
+      debut: Date.now(), finPartie: 0});
+    $("victoire").hidden = true;
+    message("Glissez de la première à la dernière lettre d'un mot.");
+    construireGrille();
+  } catch (e) { message("La grille n'a pas pu être créée. Réessayez avec « Nouvelle grille »."); }
+  E.enCours = false; activer(true); $("attente").hidden = true;
+}
+
+function activer(oui) {
+  for (const id of ["nouvelle", "theme", "sous", "indice", "solution"]) $(id).disabled = !oui;
+  majBoutons();
+}
+
+/* ===================== centrage exact des lettres ===================== */
+function mesurerLettres() {
+  const cv = document.createElement("canvas").getContext("2d");
+  cv.font = `700 100px "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif`;
+  cv.textAlign = "left"; cv.textBaseline = "alphabetic";
+  const s = POLICE / 100;
+  for (const L of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
+    const m = cv.measureText(L);
+    centrage[L] = [(m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2 * s,
+                   (m.actualBoundingBoxDescent - m.actualBoundingBoxAscent) / 2 * s];
+  }
+  centrage.Q = [centrage.Q[0], centrage.O[1]];    // corps du Q centré comme le O, la queue dépasse
+}
+function placerLettre(t, L, r, c) {
+  const [dx, dy] = centrage[L] || [0, 0];
+  const [x, y] = centre(r, c);
+  t.setAttribute("x", (x - dx).toFixed(2)); t.setAttribute("y", (y - dy).toFixed(2));
+}
+
+/* ===================== dessin ===================== */
+const centre = (r, c) => [MARGE + (c + .5) * CASE, MARGE + (r + .5) * CASE];
+function el(nom, attrs, parent) {
+  const e = document.createElementNS(NS, nom);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function construireGrille() {
+  const g = $("c-lettres"); g.innerHTML = ""; textes = [];
+  for (let r = 0; r < TAILLE; r++) {
+    textes.push([]);
+    for (let c = 0; c < TAILLE; c++) {
+      const t = el("text", {class: "lettre"}, g);
+      t.textContent = E.grille[r][c]; placerLettre(t, E.grille[r][c], r, c);
+      textes[r].push(t);
+    }
+  }
+  toutDessiner();
+}
+function ligneSVG(cs, cls, parent, couleur, ep = CASE * .64) {
+  const [x1, y1] = centre(...cs[0]), [x2, y2] = centre(...cs[cs.length - 1]);
+  const a = {x1, y1, x2, y2, class: cls, "stroke-width": ep};
+  if (couleur) a.stroke = couleur;
+  return el("line", a, parent);
+}
+function toutDessiner() {
+  if (!E.grille) return;
+  const trouves = motsTrouves();
+  const gs = $("c-solution"); gs.innerHTML = "";
+  if (E.solution) for (const [m, cs] of Object.entries(E.places)) if (!trouves.has(m)) ligneSVG(cs, "solution", gs);
+  const gt = $("c-traits"); gt.innerHTML = "";
+  for (const t of E.traits) ligneSVG(t.cases, t.mot ? "trait" : "trait faux", gt, t.mot ? t.couleur : null);
+  const gi = $("c-indice"); gi.innerHTML = "";
+  if (E.indice && Date.now() < E.indice.jusqua) {
+    const [x, y] = centre(...E.indice.cs); el("circle", {cx: x, cy: y, r: CASE * .44, class: "indice"}, gi);
+  }
+  dessinerSelection(); dessinerListe(); majInfos(); majBoutons();
+}
+function dessinerSelection() {
+  const g = $("c-selection"); g.innerHTML = "";
+  for (const ligne of textes) for (const t of ligne) t.classList.remove("sel");
+  if (!E.depart) return;
+  const cs = ligne(E.depart, E.fin || E.depart);
+  ligneSVG(cs, "selection", g);
+  for (const [r, c] of cs) textes[r][c].classList.add("sel");
+}
+function dessinerListe() {
+  const ul = $("mots"); ul.innerHTML = "";
+  const couleurs = Object.fromEntries(E.traits.filter(t => t.mot).map(t => [t.mot, t.couleur]));
+  for (const m of Object.keys(E.places).sort()) {
+    const li = document.createElement("li"); li.textContent = m;
+    if (couleurs[m]) { li.className = "ok"; li.style.setProperty("--c", couleurs[m]); }
+    ul.appendChild(li);
+  }
+  const theme = DONNEES[E.coll].groupes[E.groupe][0];
+  $("univers").textContent = theme === E.coll ? E.coll : `${E.coll} · ${theme}`;
+  $("titre-liste").textContent = E.sousJouee || "Mots à trouver";
+}
+function majInfos() {
+  const n = motsTrouves().size, total = Object.keys(E.places).length;
+  $("nb").textContent = n; $("total").textContent = total;
+  $("barre").style.width = (total ? n / total * 100 : 0) + "%";
+}
+function majBoutons() {
+  const libre = !E.enCours && E.grille;
+  $("annuler").disabled = !(libre && E.annuler.length);
+  $("retablir").disabled = !(libre && E.retablir.length);
+  $("effacer").disabled = !(libre && E.traits.length);
+  $("indice").disabled = !libre || !!E.finPartie;
+  $("solution").textContent = E.solution ? "Masquer" : "Solution";
+}
+function message(txt, bravo) { const m = $("message"); m.textContent = txt; m.classList.toggle("bravo", !!bravo); }
+
+/* ===================== sélection ===================== */
+function caseSous(ev, borner) {
+  const p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY;
+  const q = p.matrixTransform(svg.getScreenCTM().inverse());
+  let c = Math.floor((q.x - MARGE) / CASE), r = Math.floor((q.y - MARGE) / CASE);
+  if (borner) return [Math.min(Math.max(r, 0), TAILLE - 1), Math.min(Math.max(c, 0), TAILLE - 1)];
+  return (r >= 0 && r < TAILLE && c >= 0 && c < TAILLE) ? [r, c] : null;
+}
+function ligne(a, b) {
+  const [r0, c0] = a, [r1, c1] = b, dr = r1 - r0, dc = c1 - c0;
+  if (!dr && !dc) return [a];
+  const k = Math.round(Math.atan2(dr, dc) / (Math.PI / 4));
+  const sr = Math.round(Math.sin(k * Math.PI / 4)), sc = Math.round(Math.cos(k * Math.PI / 4));
+  let n = Math.max(Math.abs(dr), Math.abs(dc));
+  while (n > 0 && !(r0 + sr*n >= 0 && r0 + sr*n < TAILLE && c0 + sc*n >= 0 && c0 + sc*n < TAILLE)) n--;
+  return Array.from({length: n + 1}, (_, i) => [r0 + sr*i, c0 + sc*i]);
+}
+const egal = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
+
+svg.addEventListener("pointerdown", ev => {
+  if (!E.grille || E.enCours || E.finPartie) return;
+  const c = caseSous(ev, false); if (!c) return;
+  ev.preventDefault();
+  if (E.modeClic && E.depart) { E.fin = c; valider(); return; }
+  E.depart = E.fin = c; E.glisse = true;
+  try { svg.setPointerCapture(ev.pointerId); } catch (e) {}
+  dessinerSelection();
+});
+svg.addEventListener("pointermove", ev => {
+  if (!E.depart || !(E.glisse || E.modeClic)) return;
+  const c = caseSous(ev, true);
+  if (!egal(c, E.fin)) { E.fin = c; dessinerSelection(); }
+});
+svg.addEventListener("pointerup", ev => {
+  if (!E.glisse) return;
+  E.glisse = false; E.fin = caseSous(ev, true);
+  if (egal(E.fin, E.depart)) {
+    E.modeClic = true;
+    message("Touchez maintenant la dernière lettre du mot (Échap pour annuler).");
+    dessinerSelection(); return;
+  }
+  valider();
+});
+svg.addEventListener("pointercancel", () => annulerSelection());
+
+function annulerSelection() { E.depart = E.fin = null; E.glisse = false; E.modeClic = false; dessinerSelection(); }
+const motsTrouves = () => new Set(E.traits.filter(t => t.mot).map(t => t.mot));
+
+function valider() {
+  const cs = ligne(E.depart, E.fin);
+  annulerSelection();
+  if (cs.length < 2) return;
+  const lu = cs.map(([r, c]) => E.grille[r][c]).join(""), inv = [...lu].reverse().join("");
+  const trouves = motsTrouves();
+  const restant = m => (m in E.places) && !trouves.has(m);
+  const mot = restant(lu) ? lu : restant(inv) ? inv : null;
+  if (!mot && ((lu in E.places) || (inv in E.places))) { message(`« ${lu in E.places ? lu : inv} » est déjà barré.`); return; }
+  if (!mot && $("refuser").checked) { message(`« ${lu} » n'est pas dans la liste.`); flash(cs); return; }
+  enregistrer();
+  E.traits.push({cases: cs, mot, couleur: mot ? COULEURS[trouves.size % COULEURS.length] : null});
+  if (mot) message(`Bravo : « ${mot} » !`, true);
+  else message(`« ${lu} » n'est pas dans la liste : barré en gris. « Annuler » l'efface.`);
+  toutDessiner(); verifierVictoire();
+}
+function flash(cs) {
+  const l = ligneSVG(cs, "flash", $("c-selection"));
+  setTimeout(() => l.remove(), 450);
+}
+
+/* ===================== annuler / rétablir ===================== */
+const copie = t => t.map(x => ({...x}));
+function enregistrer() { E.annuler.push(copie(E.traits)); E.retablir = []; }
+function annuler() {
+  if (!E.annuler.length || E.enCours) return;
+  E.retablir.push(E.traits); E.traits = E.annuler.pop();
+  if (E.finPartie) { E.finPartie = 0; $("victoire").hidden = true; }
+  message("Action annulée."); toutDessiner();
+}
+function retablir() {
+  if (!E.retablir.length || E.enCours) return;
+  E.annuler.push(E.traits); E.traits = E.retablir.pop();
+  message("Action rétablie."); toutDessiner(); verifierVictoire();
+}
+function toutEffacer() {
+  if (!E.traits.length) return;
+  enregistrer(); E.traits = [];
+  if (E.finPartie) { E.finPartie = 0; $("victoire").hidden = true; }
+  message("Grille effacée. « Annuler » la fait revenir."); toutDessiner();
+}
+function donnerIndice() {
+  if (!E.grille || E.finPartie) return;
+  const trouves = motsTrouves(), restants = Object.keys(E.places).filter(m => !trouves.has(m));
+  if (!restants.length) return;
+  const m = restants[Math.floor(Math.random() * restants.length)];
+  E.indice = {cs: E.places[m][0], jusqua: Date.now() + 2600}; E.nbIndices++;
+  message(`Indice : un mot de ${m.length} lettres commence dans le cercle.`);
+  toutDessiner(); setTimeout(toutDessiner, 2700);
+}
+function basculerSolution() { E.solution = !E.solution; toutDessiner(); }
+
+function verifierVictoire() {
+  const total = Object.keys(E.places).length;
+  if (!E.finPartie && motsTrouves().size === total) {
+    E.finPartie = Date.now();
+    const d = formatTemps(E.finPartie - E.debut);
+    $("victoire-texte").textContent = `Les ${total} mots trouvés en ${d}` +
+      (E.nbIndices ? `, avec ${E.nbIndices} indice${E.nbIndices > 1 ? "s" : ""}.` : ", sans indice !") +
+      " Toute la grille est barrée : chaque lettre appartenait à un mot.";
+    $("victoire").hidden = false; message("Grille terminée !", true); majBoutons();
+  }
+}
+const formatTemps = ms => { const s = Math.floor(ms / 1000); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); };
+setInterval(() => { if (E.debut && !E.enCours) $("temps").textContent = formatTemps((E.finPartie || Date.now()) - E.debut); }, 500);
+
+$("nouvelle").onclick = nouvelleGrille; $("rejouer").onclick = nouvelleGrille;
+$("annuler").onclick = annuler; $("retablir").onclick = retablir; $("effacer").onclick = toutEffacer;
+$("indice").onclick = donnerIndice; $("solution").onclick = basculerSolution;
+document.addEventListener("keydown", ev => {
+  if (ev.target.tagName === "SELECT") return;
+  const k = ev.key.toLowerCase(), mod = ev.ctrlKey || ev.metaKey;
+  if (mod && k === "z" && !ev.shiftKey) { ev.preventDefault(); annuler(); }
+  else if (mod && (k === "y" || (k === "z" && ev.shiftKey))) { ev.preventDefault(); retablir(); }
+  else if (!mod && k === "h") donnerIndice();
+  else if (k === "escape") { annulerSelection(); message(""); }
+});
+
+/* ===================== démarrage ===================== */
+function etat() {
+  const {glisse, enCours, ...reste} = E;
+  return {...reste, depart: null, fin: null, modeClic: false};
+}
+window.claude?.hot?.snapshot?.(() => etat());
+
+async function demarrer(donnees) {
+  try { await document.fonts.load('700 21px "Atkinson Hyperlegible"'); await document.fonts.ready; } catch (e) {}
+  mesurerLettres();
+  await initBoutique();
+  $("debloquer").hidden = !(FREEMIUM && !premium.actif);
+  const s = donnees && donnees.grille ? donnees : null;
+  const choix = s || memoire.lire();
+  if (choix && DONNEES[choix.coll] && DONNEES[choix.coll].groupes[choix.groupe] && estLibre(choix.coll + "|" + choix.groupe)) {
+    E.coll = choix.coll; E.groupe = choix.groupe; E.sous = choix.sous || "";
+  } else { E.coll = "Cuisine"; E.groupe = 0; E.sous = ""; }
+  document.body.dataset.coll = E.coll;
+  remplirThemes(); remplirSous();
+  if (s) {
+    Object.assign(E, s, {enCours: false, glisse: false});
+    $("attente").hidden = true; activer(true); construireGrille();
+    if (E.finPartie) verifierVictoire();
+  } else nouvelleGrille();
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(demarrer) : demarrer(window.claude?.hot?.data ?? {});
+</script>
+
+<script>
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>

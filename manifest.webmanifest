@@ -1,0 +1,38 @@
+{
+  "name": "Mots Mêlés – Grilles pleines",
+  "short_name": "Mots Mêlés",
+  "description": "Mots mêlés en français : 78 sous-catégories, des grilles 100 % remplies où chaque lettre appartient à un mot.",
+  "lang": "fr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F5F4F0",
+  "theme_color": "#9E3B26",
+  "categories": [
+    "games",
+    "puzzle",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "icones/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icones/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icones/icone-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
