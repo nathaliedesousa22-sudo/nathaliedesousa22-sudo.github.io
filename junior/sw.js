@@ -1,5 +1,5 @@
 // Service worker de Mots mêlés junior : met le jeu en cache pour jouer sans connexion.
-const CACHE = "mots-meles-junior-1.0.0";
+const CACHE = "mots-meles-junior-1.1.0";
 const FICHIERS = ["./", "index.html", "manifest.webmanifest", "confidentialite.html",
   "icones/icone-192.png", "icones/icone-512.png", "icones/icone-maskable-512.png", "icones/icone-180.png",
   "polices/atkinson-400.woff", "polices/atkinson-700.woff", "polices/fredoka-600.woff", "polices/fredoka-700.woff"];

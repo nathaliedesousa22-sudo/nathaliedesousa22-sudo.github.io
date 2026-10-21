@@ -116,6 +116,15 @@ button{font:inherit;color:inherit;cursor:pointer}
 @keyframes pop{from{transform:scale(.6);opacity:0}}
 #feux{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
 .petale{position:fixed;left:0;top:0;width:14px;height:18px;border-radius:0 100% 0 100%;pointer-events:none;z-index:35;will-change:transform,opacity}
+.theme.ferme .pic,.theme.ferme .nom,.theme.ferme .etoiles{opacity:.55}
+.cadenas{position:absolute;top:14px;right:12px;font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;padding:3px 9px;border-radius:999px;background:var(--papier);border:2px solid var(--bord);color:var(--encre)}
+.complet{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;padding:12px;border-radius:16px;border:2px dashed var(--accent);background:transparent;font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;color:var(--accent)}
+.bravo .gauche{text-align:left}
+.question{display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 14px;flex-wrap:wrap}
+.question input{width:90px;font:inherit;font-size:22px;font-weight:700;text-align:center;padding:8px;border-radius:12px;border:2px solid var(--bord);background:var(--papier);color:var(--encre)}
+.info{min-height:1.4em;margin:12px 0 0;font-size:15px;color:var(--accent)}
+.liste-themes{margin:0 0 14px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.liste-themes li{padding:4px 10px;border-radius:999px;background:var(--papier);border:2px solid var(--bord);font-size:15px}
 .pied{margin-top:28px;text-align:center;color:var(--encre-douce);font-size:14px}
 @media (prefers-reduced-motion:reduce){.case.ancre,.case.indice{animation:none;color:var(--accent)}.bravo{animation:none}}
 </style>
@@ -135,6 +144,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     <div class="niveaux" id="niveaux"></div>
     <div class="etiquette">2. Choisis ton thème</div>
     <div class="themes" id="themes"></div>
+    <button class="complet" id="complet" hidden>🔓 Débloquer tout le jeu</button>
     <p class="pied">Une création Naty Mey · <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
   </div>
 
@@ -169,6 +179,30 @@ button{font:inherit;color:inherit;cursor:pointer}
     </div>
   </div>
 </div>
+<div class="voile" id="boutique" hidden>
+  <div class="bravo" role="dialog" aria-labelledby="boutique-titre">
+    <div id="porte">
+      <div class="grand">👨‍👩‍👧</div>
+      <h2 id="boutique-titre">Pour les parents</h2>
+      <p>Cette partie est réservée aux adultes.<br><strong id="calcul"></strong></p>
+      <div class="question"><input id="reponse" inputmode="numeric" autocomplete="off" aria-label="Réponse"><button class="btn" id="valider">OK</button></div>
+      <div class="actions"><button class="btn second" id="fermer-porte">Retour</button></div>
+    </div>
+    <div id="vitrine" hidden>
+      <div class="grand">🔓</div>
+      <h2>Tout le jeu</h2>
+      <p id="vitrine-resume"></p>
+      <ul class="liste-themes" id="vitrine-liste"></ul>
+      <p style="font-size:15px">Achat unique, valable à vie sur votre compte Google. Pas d'abonnement, pas de publicité.</p>
+      <div class="actions">
+        <button class="btn" id="acheter">Débloquer tout le jeu</button>
+        <button class="btn second" id="restaurer">J'ai déjà acheté : restaurer</button>
+        <button class="btn second" id="fermer-vitrine">Plus tard</button>
+      </div>
+    </div>
+    <p class="info" id="boutique-info" aria-live="polite"></p>
+  </div>
+</div>
 <canvas id="feux" hidden></canvas>
 
 <script>
@@ -193,6 +227,83 @@ const $ = s => document.querySelector(s);
 function lire(cle, defaut){ try{ const v = localStorage.getItem(cle); return v ? JSON.parse(v) : defaut; }catch(e){ return defaut; } }
 function ecrire(cle, v){ try{ localStorage.setItem(cle, JSON.stringify(v)); }catch(e){} }
 let faits = lire("mmj-faits", {});
+
+/* ===== Version gratuite + achat unique « jeu_complet » (Google Play) ===== */
+// FREEMIUM vaut true dans l'application Google Play (et son site), false dans l'aperçu Claude.
+const FREEMIUM = true;
+const GRATUITS = new Set(["Les animaux"]);          // thème offert, tous niveaux
+const PRODUIT = "jeu_complet";                       // identifiant du produit dans la Play Console
+const BILLING = "https://play.google.com/billing";
+let premium = !FREEMIUM || lire("mmj-premium", false) === true;
+let boutique = null, prixAffiche = "";
+const estLibre = nom => premium || GRATUITS.has(nom);
+
+async function initBoutique(){
+  if(premium || !("getDigitalGoodsService" in window)) return;
+  try{
+    boutique = await window.getDigitalGoodsService(BILLING);
+    if(!boutique) return;
+    try{
+      const [d] = await boutique.getDetails([PRODUIT]);
+      if(d && d.price) prixAffiche = new Intl.NumberFormat("fr-FR",{style:"currency",currency:d.price.currency}).format(+d.price.value);
+    }catch(e){}
+    await restaurer(true);
+  }catch(e){ boutique = null; }
+}
+async function restaurer(silencieux){
+  if(!boutique){ if(!silencieux) infoBoutique("La restauration se fait dans l'application installée depuis Google Play."); return false; }
+  try{
+    let achats = await boutique.listPurchases();
+    if(boutique.listPurchaseHistory) achats = achats.concat(await boutique.listPurchaseHistory());
+    if(achats.some(a => a.itemId === PRODUIT)){ debloquer(); return true; }
+  }catch(e){}
+  if(!silencieux) infoBoutique("Aucun achat trouvé sur ce compte Google.");
+  return false;
+}
+async function acheter(){
+  if(!boutique){ infoBoutique("L'achat se fait dans l'application Mots mêlés junior installée depuis Google Play."); return; }
+  try{
+    const demande = new PaymentRequest([{supportedMethods: BILLING, data:{sku: PRODUIT}}],
+                                       {total:{label:"Total", amount:{currency:"EUR", value:"0"}}});
+    const reponse = await demande.show();
+    // achat unique : validé auprès de Google (consume), puis le déblocage est mémorisé ;
+    // sur un autre appareil, « restaurer » le retrouve dans l'historique d'achats du compte.
+    try{ await boutique.consume(reponse.details.purchaseToken); }catch(e){}
+    await reponse.complete("success");
+    debloquer();
+  }catch(e){ infoBoutique("Achat annulé ou impossible pour le moment."); }
+}
+function debloquer(){
+  premium = true; ecrire("mmj-premium", true);
+  $("#boutique").hidden = true;
+  if(!$("#accueil").hidden) accueil();
+}
+function infoBoutique(t){ $("#boutique-info").textContent = t; }
+let attendu = 0;
+function ouvrirBoutique(){
+  const a = 5 + Math.floor(Math.random()*5), b = 6 + Math.floor(Math.random()*4);
+  attendu = a*b; $("#calcul").textContent = `Combien font ${a} × ${b} ?`;
+  $("#reponse").value = ""; infoBoutique("");
+  $("#porte").hidden = false; $("#vitrine").hidden = true; $("#boutique").hidden = false;
+  $("#reponse").focus();
+}
+function montrerVitrine(){
+  const fermes = THEMES.filter(t => !GRATUITS.has(t.nom));
+  const nb = fermes.reduce((s,t)=>s+Object.values(GRILLES[t.nom]).reduce((x,l)=>x+l.length,0),0);
+  $("#vitrine-resume").textContent = `${fermes.length} thèmes et ${nb} grilles en plus, dans les 3 niveaux.`;
+  $("#vitrine-liste").innerHTML = fermes.map(t=>`<li>${t.pic} ${t.nom}</li>`).join("");
+  $("#acheter").textContent = prixAffiche ? `Débloquer tout le jeu · ${prixAffiche}` : "Débloquer tout le jeu";
+  $("#porte").hidden = true; $("#vitrine").hidden = false; infoBoutique("");
+}
+$("#valider").onclick = () => {
+  if(parseInt($("#reponse").value,10) === attendu) montrerVitrine();
+  else { infoBoutique("Ce n'est pas la bonne réponse. Demande à un adulte !"); $("#reponse").value = ""; }
+};
+$("#reponse").addEventListener("keydown", e => { if(e.key === "Enter") $("#valider").click(); });
+$("#fermer-porte").onclick = $("#fermer-vitrine").onclick = () => { $("#boutique").hidden = true; };
+$("#acheter").onclick = acheter;
+$("#restaurer").onclick = () => restaurer(false);
+$("#complet").onclick = ouvrirBoutique;
 let niveau = lire("mmj-niveau", "facile");
 let sonActif = lire("mmj-son", true);
 
@@ -229,12 +340,14 @@ function accueil(){
   for(const t of THEMES){
     const liste = GRILLES[t.nom][niveau], fait = faits[t.nom + "|" + niveau] || [];
     const b = document.createElement("button");
-    b.className = "theme"; b.style.setProperty("--c", t.c);
-    b.innerHTML = `<span class="bande"></span><span class="pic">${t.pic}</span><span class="nom">${t.nom}</span>
+    const libre = estLibre(t.nom);
+    b.className = "theme" + (libre ? "" : " ferme"); b.style.setProperty("--c", t.c);
+    b.innerHTML = `<span class="bande"></span>${libre ? "" : `<span class="cadenas">🔒 Version complète</span>`}<span class="pic">${t.pic}</span><span class="nom">${t.nom}</span>
       <span class="etoiles" aria-label="${fait.length} grilles réussies sur ${liste.length}">${liste.map((_,i)=>`<i class="${fait.includes(i)?"oui":""}">★</i>`).join("")}</span>`;
-    b.onclick = () => { const i = liste.findIndex((_,k)=>!fait.includes(k)); jouer(t, i < 0 ? 0 : i); };
+    b.onclick = () => { if(!estLibre(t.nom)) return ouvrirBoutique(); const i = liste.findIndex((_,k)=>!fait.includes(k)); jouer(t, i < 0 ? 0 : i); };
     zt.appendChild(b);
   }
+  $("#complet").hidden = premium;
   scrollTo(0,0);
 }
 
@@ -438,6 +551,7 @@ $("#suivante").onclick = ()=>{
 $("#menu").onclick = accueil;
 $("#retour").onclick = accueil;
 accueil();
+initBoutique().then(()=>{ if(premium && !$("#accueil").hidden) accueil(); });
 if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
 </body>
