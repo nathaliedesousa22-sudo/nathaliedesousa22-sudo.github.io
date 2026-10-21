@@ -1,1 +1,14 @@
-[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"android_app","package_name":"A_REMPLACER","sha256_cert_fingerprints":["A_REMPLACER"]}}]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.natymey.motsmelesjunior",
+      "sha256_cert_fingerprints": [
+        "80:0E:20:35:6C:DD:76:D6:39:C8:27:93:19:D0:B4:FB:BB:4B:C4:BA:53:EB:46:26:A7:FC:09:3B:B0:99:85:03"
+      ]
+    }
+  }
+]
