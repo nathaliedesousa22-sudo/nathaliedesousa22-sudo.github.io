@@ -1,0 +1,19 @@
+{
+  "name": "Mots mêlés junior",
+  "short_name": "Mots mêlés junior",
+  "description": "Mots mêlés pour enfants : 5 thèmes, 3 niveaux, 75 grilles pleines où chaque lettre appartient à un mot.",
+  "lang": "fr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbf8f1",
+  "theme_color": "#e2574c",
+  "categories": ["games", "kids", "education"],
+  "icons": [
+    {"src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
