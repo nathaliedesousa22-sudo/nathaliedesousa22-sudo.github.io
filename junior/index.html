@@ -229,8 +229,8 @@ function ecrire(cle, v){ try{ localStorage.setItem(cle, JSON.stringify(v)); }cat
 let faits = lire("mmj-faits", {});
 
 /* ===== Version gratuite + achat unique « jeu_complet » (Google Play) ===== */
-// FREEMIUM vaut true dans l'application Google Play (et son site), false dans l'aperçu Claude.
-const FREEMIUM = true;
+// FREEMIUM vaut false : jeu entièrement gratuit, offert aux lecteurs des livres Naty Mey (pas de Google Play).
+const FREEMIUM = false;
 const GRATUITS = new Set(["Les animaux"]);          // thème offert, tous niveaux
 const PRODUIT = "jeu_complet";                       // identifiant du produit dans la Play Console
 const BILLING = "https://play.google.com/billing";
